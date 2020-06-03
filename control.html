@@ -1,0 +1,54 @@
+<html dir="ltr"><head>
+        <title>OpenLP Lyrics Control</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="control.css">
+        <script type="text/javascript" src="/files/jquery.min.js"></script>
+        <script type="text/javascript" src="control.js"></script>
+    </head>
+    <body>
+        <div class="controls-container">
+            <div class="floating">
+                <div class="control-group custom-width">
+                    <button id="increment-button-1" type="button">Display next</button>
+                    <input id="increment-spinner-1" type="number" min="1" step="1" value="1" size="2">
+                    <button id="increment-button-2">Display next</button>
+                    <input id="increment-spinner-2" type="number" min="1" step="1" value="1" size="2">
+                </div>
+            </div>
+            <div class="floating">
+                <div class="control-group"><button id="remaining-button" type="button">Display remaining</button></div>
+            </div>
+            <div class="floating">
+                <div class="control-group">
+                    <button id="undo-button" type="button">Undo display</button>
+                    <button id="redo-button" type="button">Redo display</button>
+                </div>
+            </div>
+            <div class="floating">
+                <div class="control-group"><input id="auto-show-checkbox" type="checkbox"><label for="auto-show-checkbox">Auto-show on slide change</label></div>
+                <div class="control-group"><input id="display-all-checkbox" type="checkbox"><label for="display-all-checkbox">Display all text</label></div>
+            </div>
+            <div class="floating">
+                <h6>Current slide:</h6>
+                <div id="slide-text">
+                </div>
+            </div>
+            <div class="floating">
+            <h6>Settings</h6>
+            <div class="control-group">
+                    <span>Button size</span><br>
+                    <select id="button-height-select">
+                        <option>Normal</option>
+                        <option>Large</option>
+                        <option>Larger</option>
+                    </select>
+            </div>
+            <div class="control-group">
+                    <span>Font size</span><br>
+                    <input id="font-size-spinner" type="number" min="9" max="36" step="1" value="9" size="2">
+            </div>
+
+            </div>
+        </div>
+    </body></html>

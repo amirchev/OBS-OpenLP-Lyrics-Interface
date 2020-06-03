@@ -1,0 +1,21 @@
+body {
+    padding: 6px;
+    overflow: hidden;
+}
+
+#lyrics-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#lyrics {
+    height: fit-content;
+    font-family: sans-serif;
+    font-size: 36pt;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 16px;
+    text-align: center;
+}

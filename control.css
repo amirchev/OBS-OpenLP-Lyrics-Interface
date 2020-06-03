@@ -1,0 +1,99 @@
+body {
+    padding:8px;
+    background-color: #3a393a;
+    font-family: sans-serif;
+    font-size: 9pt;
+    color: #e1e0e1;
+}
+
+.controls-container {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.floating {
+    padding: 4px;
+    margin: 2px
+}
+
+.control-group {
+    display: inline-block;
+    min-width: 148px;
+    max-width: 300px;
+    float: left;
+}
+button {
+    font-size: 9pt;
+    border: none;
+    background-color: #4c4c4c;
+    color: #e1e0e1;
+    padding: 4px 12px;
+    font-family: sans-serif;
+    border-radius: 4px;
+    margin: 2px auto;
+    display: inline-block;
+    width: 100%;
+}
+
+input[type="number"] {
+    border: none;
+    background-color: #1f1e1f;
+    color: #e1e0e1;
+    padding: 4px;;
+    font-family: sans-serif;
+    font-size: 9pt;
+    border-radius: 4px;
+    margin: 2px auto;
+}
+
+input[type="checkbox"] {
+    display: table-cell;
+    color: #e1e0e1;
+    font-family: sans-serif;
+    font-size: 9pt;
+}
+
+select {
+    border: none;
+    background-color: #4c4c4c;
+    color: #e1e0e1;
+    padding: 4px;;
+    font-family: sans-serif;
+    font-size: 9pt;
+    border-radius: 4px;
+    margin: 2px auto;
+}
+.custom-width * {
+    display: inline-block;
+}
+.custom-width button {
+    width: 67%;
+}
+.custom-width button + input {
+    width: 28%;
+}
+
+button:hover {
+    background-color: #7a797a;
+}
+
+select:hover {
+    background-color: #585758;
+}
+
+button:active, select:indeterminate {
+    background-color: #1f1e1f;
+}
+
+.controls-container {
+    float:left;
+}
+
+#slide-text b {
+    color: #DCEDC8;
+}
+
+h6 {
+    font-size: 9pt;
+    margin: 0 0 4px 0;
+}
