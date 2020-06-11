@@ -20,6 +20,8 @@ It would be beneficial to set up your presentation computer with a static IP to 
 
 You're all done.
 
+To view the comprehensive guide with screenshots, go [here](https://obsproject.com/forum/resources/using-openlp-interface-for-lyrics.1009/).
+
 ## Features
 - Auto-show on slide change automatically displays the next slide, displaying the same number of lines as you have set on your **first** Display Next button. 
 - Display all checkbox will automatically display all lines when auto-show is enabled.
