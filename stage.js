@@ -62,6 +62,10 @@ window.OpenLP = {
         // Show the current slide on top. Any trailing slides for the same verse
         // are shown too underneath in grey.
         // Then leave a blank line between following verses
+        if (OpenLP.currentSlides == undefined) {
+            // Bail if we're not fully initialized yet
+            return
+        }
         var slide = OpenLP.currentSlides[OpenLP.currentSlide];
         var text = "";
         // use title if available
@@ -90,7 +94,20 @@ window.OpenLP = {
         );
     },
     channelReceive: function (ev) {
-        $("#lyrics").html(ev.data);
+        var lyricsContainer = $("#lyrics")
+        // Reset font size back to our "baseline"
+        lyricsContainer.css('font-size', '36pt')
+        // Populate with our newest lyrics
+        lyricsContainer.html(ev.data);
+
+        // Loop while our lyrics box is taller than our window
+        while (lyricsContainer.outerHeight() > window.innerHeight) {
+            // Get the current font size (in px) and shrink it by 1 px
+            var currentSize = lyricsContainer.css('font-size')
+            var nextSize = (parseInt(currentSize) - 1) + 'px'
+            // Apply the new (smaller) font size
+            lyricsContainer.css('font-size', nextSize)
+        }
     }
 }
 $.ajaxSetup({cache: false});
