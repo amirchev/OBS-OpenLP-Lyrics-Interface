@@ -23,6 +23,8 @@ You're all done.
 To view the comprehensive guide with screenshots, go [here](https://obsproject.com/forum/resources/using-openlp-interface-for-lyrics.1009/).
 
 ## Features
+- Option to hide lyrics when live view is hidden.
+- Hide lyrics toggle button.
 - Auto-show on slide change automatically displays the next slide, displaying the same number of lines as you have set on your **first** Display Next button. 
 - Display all checkbox will automatically display all lines when auto-show is enabled.
 - Undo display button if you would like to go to previous lyric. Only the last 5 lyrics are saved. Redo display to go forward in saved lyrics.
