@@ -4,21 +4,21 @@ body {
 }
 
 #lyrics-container {
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
 }
 
 #lyrics {
-    height: fit-content;
+    width: fit-content; 
     font-family: sans-serif;
     font-size: 36pt;
     color: white;
     background: rgba(0, 0, 0, 0.5);
     padding: 16px;
     text-align: center;
+    vertical-align: middle;
     position: fixed;
     bottom: 0;
-    width: 100%;
 }

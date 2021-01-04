@@ -2,26 +2,41 @@ var openlpChannel = new BroadcastChannel("obs_openlp_channel");
 var currentLines;
 var lastDisplayedIndex;
 
+var autoResize = true;
+
 var max_saved_lines = 5;
 var pastLines = [];
 var pastPreviews = [];
 var historyIndex = 0;
 
+var hiding = false;
+var fadeDuration = 900;
+
 openlpChannel.onmessage = function (ev) {
-    currentLines = JSON.parse(ev.data).lines;
-    lastDisplayedIndex = -1;
-    if ($("#auto-show-checkbox").prop("checked")) {
-        if ($("#display-all-checkbox").prop("checked")) {
-            displayNext(currentLines.length);
+    var data = JSON.parse(ev.data);
+    var type = data.type;
+    if (type === "init") {
+        openlpChannel.postMessage(JSON.stringify({type: "hideOnBlank", value: $("#auto-hide-checkbox").prop("checked")}));
+        openlpChannel.postMessage(JSON.stringify({type: "fadeDuration", value: fadeDuration}));
+        openlpChannel.postMessage(JSON.stringify({type: "hide", value: hiding}));
+        openlpChannel.postMessage(JSON.stringify({type: "resize", value: autoResize}));
+        openlpChannel.postMessage(JSON.stringify({type: "font", value: $("#lyrics-font-size-spinner").val()}));
+    } else if (type === "lyrics") {
+        currentLines = data.lines;
+        lastDisplayedIndex = -1;
+        if ($("#auto-update-checkbox").prop("checked")) {
+            if ($("#display-all-checkbox").prop("checked")) {
+                displayNext(currentLines.length);
+            } else {
+                displayNext(Number($("#increment-spinner-1").val()));
+            }
         } else {
-            displayNext(Number($("#increment-spinner-1").val()));
+            var lines = "";
+            for (var i = 0; i < currentLines.length; i++) {
+                lines += currentLines[i] + "<br>";
+            }
+            $("#slide-text").html(lines);
         }
-    } else {
-        var lines = "";
-        for (var i = 0; i < currentLines.length; i++) {
-            lines += currentLines[i] + "<br>";
-        }
-        $("#slide-text").html(lines);
     }
 };
 
@@ -38,8 +53,9 @@ function displayNext(amount) {
     if (linesToDisplay.length <= 0) {
         return;
     }
-    openlpChannel.postMessage(linesToDisplay);
+    openlpChannel.postMessage(JSON.stringify({type: "lyrics", value: linesToDisplay}));
 
+    //update preview
     var preview = "";
     for (var i = 0; i < lastDisplayedIndex + 1 && i < currentLines.length; i++) {
         preview += currentLines[i] + "<br>";
@@ -98,14 +114,35 @@ function loadSettings() {
     if (loadedLineIncrement2 !== null) {
         $("#increment-spinner-2").val(Number(loadedLineIncrement2));
     }
+    var loadedAutoUpdate = window.localStorage.getItem("autoUpdate");
+    if (loadedAutoUpdate !== null) {
+        $("#auto-update-checkbox").prop("checked", loadedAutoUpdate === "true");
+    }
+    var loadedAutoHide = window.localStorage.getItem("autoHide");
+    if (loadedAutoHide !== null) {
+        $("#auto-hide-checkbox").prop("checked", loadedAutoHide === "true");
+    }
+    var loadedResize = window.localStorage.getItem("autoResize");
+    if (loadedResize !== null) {
+        $("#resize-checkbox").prop("checked", loadedResize === "true");
+    }
     var loadedDisplayAll = window.localStorage.getItem("displayAll");
     if (loadedDisplayAll !== null) {
         $("#display-all-checkbox").prop("checked", loadedDisplayAll === "true");
     }
-    var loadedFont = window.localStorage.getItem("font");
-    if (loadedFont !== null) {
-        updateFontSize(loadedFont);
-        $("#font-size-spinner").val(Number(loadedFont));
+    var loadedControlFont = window.localStorage.getItem("controlFont");
+    if (loadedControlFont !== null) {
+        updateFontSize(loadedControlFont);
+        $("#control-font-size-spinner").val(Number(loadedControlFont));
+    }
+    var loadedLyricsFont = window.localStorage.getItem("lyricsFont");
+    if (loadedLyricsFont !== null) {
+        $("#lyrics-font-size-spinner").val(Number(loadedLyricsFont));
+    }
+    var loadedFadeDuration = window.localStorage.getItem("fadeDuration");
+    if (loadedFadeDuration !== null) {
+        fadeDuration = loadedFadeDuration;
+        $("#fade-duration-spinner").val(Number(fadeDuration));
     }
     var loadedButtonSize = window.localStorage.getItem("buttonSize");
     if (loadedButtonSize !== null) {
@@ -123,13 +160,36 @@ $(function () {
     $("#increment-spinner-2").change(function () {
         window.localStorage.setItem("lineIncrement2", $(this).val());
     });
+    $("#auto-update-checkbox").change(function () {
+        window.localStorage.setItem("autoUpdate", $(this).prop("checked"));
+    });
+    $("#auto-hide-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        window.localStorage.setItem("autoHide", checked);
+        openlpChannel.postMessage(JSON.stringify({type: "hideOnBlank", value: checked}));
+    });
+    $("#resize-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        window.localStorage.setItem("autoResize", checked);
+        openlpChannel.postMessage(JSON.stringify({type: "resize", value: checked}));
+    });
     $("#display-all-checkbox").change(function () {
         window.localStorage.setItem("displayAll", $(this).prop("checked"));
-    })
-    $("#font-size-spinner").change(function () {
+    });
+    $("#control-font-size-spinner").change(function () {
         var font = $(this).val();
         updateFontSize(font);
-        window.localStorage.setItem("font", font);
+        window.localStorage.setItem("controlFont", font);
+    });
+    $("#lyrics-font-size-spinner").change(function () {
+        var font = $(this).val();
+        window.localStorage.setItem("lyricsFont", font);
+        openlpChannel.postMessage(JSON.stringify({type: "font", value: font}));
+    });
+    $("#fade-duration-spinner").change(function () {
+        fadeDuration = $(this).val();
+        window.localStorage.setItem("fadeDuration", fadeDuration);
+        openlpChannel.postMessage(JSON.stringify({type: "fadeDuration", value: fadeDuration}));
     });
     $("#button-height-select").change(function () {
         var opt = $(this).val();
@@ -150,5 +210,15 @@ $(function () {
     });
     $("#redo-button").click(function () {
         displaySaved(historyIndex - 1);
+    });
+    $("#hide-button").click(function () {
+        if (!hiding) {
+            $(this).addClass("activeButton");
+            hiding = true;
+        } else {
+            $(this).removeClass("activeButton");
+            hiding = false;
+        }
+        openlpChannel.postMessage(JSON.stringify({type: "hide", value: hiding}));
     });
 });

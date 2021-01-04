@@ -73,7 +73,7 @@ select {
     width: 28%;
 }
 
-button:hover {
+button:hover:not(.activeButton) {
     background-color: #7a797a;
 }
 
@@ -81,7 +81,7 @@ select:hover {
     background-color: #585758;
 }
 
-button:active, select:indeterminate {
+button:active, select:indeterminate, .activeButton {
     background-color: #1f1e1f;
 }
 

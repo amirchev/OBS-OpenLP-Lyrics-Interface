@@ -75,7 +75,7 @@ window.OpenLP = {
             text = slide["text"];
         }
         //text = text.replace(/\n/g, "<br />");
-        obsChannel.postMessage(JSON.stringify({lines: text.split(/\n/g)}));
+        obsChannel.postMessage(JSON.stringify({type: "lyrics", lines: text.split(/\n/g)}));
     },
     pollServer: function () {
         $.getJSON(
@@ -88,25 +88,66 @@ window.OpenLP = {
                         OpenLP.loadSlides();
                     } else if (OpenLP.currentSlide != data.results.slide) {
                         OpenLP.currentSlide = parseInt(data.results.slide, 10);
-                        OpenLP.updateSlide();   
+                        OpenLP.updateSlide();
+                    }
+                    //if screen is blanked, hide on stream as well
+                    var blankScreen = data.results.display === true
+                            || data.results.theme === true
+                            || data.results.blank === true;
+                    if (blankScreen && hideOnBlankScreen || alwaysHide) {
+                        if (!lyricsHidden) {
+                            $("#lyrics").fadeOut(Number(fadeDuration));
+                            lyricsHidden = true;
+                        }
+                    } else {
+                        if (lyricsHidden) {
+                            $("#lyrics").fadeIn(Number(fadeDuration));
+                            lyricsHidden = false;
+                        }
                     }
                 }
         );
     },
     channelReceive: function (ev) {
-        var lyricsContainer = $("#lyrics")
-        // Reset font size back to our "baseline"
-        lyricsContainer.css('font-size', '36pt')
-        // Populate with our newest lyrics
-        lyricsContainer.html(ev.data);
+        if (ev.data === null) {
+            return;
+        }
+        var redoLyrics = false;
+        var data = JSON.parse(ev.data);
+        var type = data.type;
+        if (type === "hide") {
+            alwaysHide = data.value;
+        } else if (type === "hideOnBlank") {
+            hideOnBlankScreen = data.value;
+        } else if (type === "fadeDuration") {
+            fadeDuration = data.value;
+        } else if (type === "resize") {
+            autoResize = data.value;
+            redoLyrics = true;
+        } else if (type === "font") {
+            defaultFont = data.value;
+            redoLyrics = true;
+        }
+        if (type === "lyrics" || redoLyrics) {
+            var lyricsContainer = $("#lyrics")
+            // Reset font size back to our "baseline"
+            lyricsContainer.css('font-size', defaultFont + "pt");
 
-        // Loop while our lyrics box is taller than our window
-        while (lyricsContainer.outerHeight() > window.innerHeight) {
-            // Get the current font size (in px) and shrink it by 1 px
-            var currentSize = lyricsContainer.css('font-size')
-            var nextSize = (parseInt(currentSize) - 1) + 'px'
-            // Apply the new (smaller) font size
-            lyricsContainer.css('font-size', nextSize)
+            // Populate with our newest lyrics if we're not just redoing lyrics
+            if (!redoLyrics) {
+                lyricsContainer.html(data.value);
+            }
+
+            if (autoResize) {
+                // Loop while our lyrics box is taller than our window
+                while (lyricsContainer.outerHeight() > window.innerHeight) {
+                    // Get the current font size (in px) and shrink it by 1 px
+                    var currentSize = lyricsContainer.css('font-size')
+                    var nextSize = (parseInt(currentSize) - 1) + 'px'
+                    // Apply the new (smaller) font size
+                    lyricsContainer.css('font-size', nextSize)
+                }
+            }
         }
     }
 }
@@ -114,4 +155,15 @@ $.ajaxSetup({cache: false});
 setInterval(OpenLP.pollServer, 250);
 OpenLP.pollServer();
 var obsChannel = new BroadcastChannel("obs_openlp_channel");
+
+var hideOnBlankScreen = false;
+var lyricsHidden = false;
+var alwaysHide = false;
+var fadeDuration = 900;
+
+var autoResize = false;
+var defaultFont = 36;
+
 obsChannel.onmessage = OpenLP.channelReceive;
+
+obsChannel.postMessage(JSON.stringify({type: "init"}));
