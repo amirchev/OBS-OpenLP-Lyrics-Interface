@@ -101,7 +101,9 @@ window.OpenLP = {
                         }
                     } else {
                         if (lyricsHidden) {
-                            $("#lyrics").fadeIn(Number(fadeDuration));
+                            if (!emptyString) {
+                                $("#lyrics").fadeIn(Number(fadeDuration));
+                            }
                             lyricsHidden = false;
                         }
                     }
@@ -135,7 +137,18 @@ window.OpenLP = {
 
             // Populate with our newest lyrics if we're not just redoing lyrics
             if (!redoLyrics) {
-                lyricsContainer.html(data.value);
+                if (data.value.replaceAll("<br>", "").trim().length === 0) { //empty str
+                    $("#lyrics").fadeOut(Number(fadeDuration));
+                    emptyString = true;
+                } else {
+                    lyricsContainer.html(data.value);
+                    if (emptyString) {
+                        emptyString = false;
+                        if (!lyricsHidden) {
+                            $("#lyrics").fadeIn(Number(fadeDuration));
+                        }
+                    }
+                }
             }
 
             if (autoResize) {
@@ -158,6 +171,7 @@ var obsChannel = new BroadcastChannel("obs_openlp_channel");
 
 var hideOnBlankScreen = false;
 var lyricsHidden = false;
+var emptyString = false;
 var alwaysHide = false;
 var fadeDuration = 900;
 
