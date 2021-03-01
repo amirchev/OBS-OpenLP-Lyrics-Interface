@@ -45,7 +45,7 @@ function displayNext(amount) {
         return;
     }
 
-    //for efficiency sake, prepare the lyrics and send them off, then prepare the preview
+    //send lines to stage
     var linesToDisplay = "";
     for (var i = lastDisplayedIndex + 1; i <= lastDisplayedIndex + amount && i < currentLines.length; i++) {
         linesToDisplay += currentLines[i] + "<br>";
@@ -71,7 +71,6 @@ function displayNext(amount) {
     for (var i = max_saved_lines - 1; i > 0; i--) {
         if (pastLines[i - 1] !== undefined) {
             pastLines[i] = pastLines[i - 1];
-            console.log(i + " : " + pastLines[i]);
         }
         if (pastPreviews[i - 1] !== undefined) {
             pastPreviews[i] = pastPreviews[i - 1];
@@ -88,7 +87,7 @@ function displaySaved(index) {
             || pastLines[index] === undefined) {
         return;
     }
-    openlpChannel.postMessage(pastLines[index]);
+    openlpChannel.postMessage(JSON.stringify({type: "lyrics", value: pastLines[index]}));
     $("#slide-text").html(pastPreviews[index]);
     historyIndex = index;
 }
@@ -210,6 +209,12 @@ $(function () {
     });
     $("#redo-button").click(function () {
         displaySaved(historyIndex - 1);
+    });
+    $("#next-button").click(function () {
+        openlpChannel.postMessage(JSON.stringify({type: "nextSlide"}));
+    });
+    $("#previous-button").click(function () {
+        openlpChannel.postMessage(JSON.stringify({type: "previousSlide"}));
     });
     $("#hide-button").click(function () {
         if (!hiding) {

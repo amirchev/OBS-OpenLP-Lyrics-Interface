@@ -114,42 +114,44 @@ window.OpenLP = {
         if (ev.data === null) {
             return;
         }
-        var redoLyrics = false;
+        var updateLayout = false;
         var data = JSON.parse(ev.data);
-        var type = data.type;
-        if (type === "hide") {
+        if (data.type === "hide") {
             alwaysHide = data.value;
-        } else if (type === "hideOnBlank") {
+        } else if (data.type === "hideOnBlank") {
             hideOnBlankScreen = data.value;
-        } else if (type === "fadeDuration") {
+        } else if (data.type === "fadeDuration") {
             fadeDuration = data.value;
-        } else if (type === "resize") {
+        } else if (data.type === "resize") {
             autoResize = data.value;
-            redoLyrics = true;
-        } else if (type === "font") {
+            updateLayout = true;
+        } else if (data.type === "font") {
             defaultFont = data.value;
-            redoLyrics = true;
-        }
-        if (type === "lyrics" || redoLyrics) {
+            updateLayout = true;
+        } else if (data.type === "nextSlide") {
+            $.get("/api/controller/live/next");
+        } else if (data.type === "previousSlide") {
+            $.get("/api/controller/live/previous");
+        } else if (data.type === "lyrics") {
             var lyricsContainer = $("#lyrics")
-            // Reset font size back to our "baseline"
-            lyricsContainer.css('font-size', defaultFont + "pt");
-
-            // Populate with our newest lyrics if we're not just redoing lyrics
-            if (!redoLyrics) {
-                if (data.value.replaceAll("<br>", "").trim().length === 0) { //empty str
-                    $("#lyrics").fadeOut(Number(fadeDuration));
-                    emptyString = true;
-                } else {
-                    lyricsContainer.html(data.value);
-                    if (emptyString) {
-                        emptyString = false;
-                        if (!lyricsHidden) {
-                            $("#lyrics").fadeIn(Number(fadeDuration));
-                        }
+            if (data.value.replaceAll("<br>", "").trim().length === 0) { //empty str
+                $("#lyrics").fadeOut(Number(fadeDuration));
+                emptyString = true;
+            } else {
+                lyricsContainer.html(data.value);
+                if (emptyString) {
+                    emptyString = false;
+                    if (!lyricsHidden) {
+                        $("#lyrics").fadeIn(Number(fadeDuration));
                     }
                 }
             }
+            updateLayout = true;
+        }
+        
+        if (updateLayout) {
+            // Reset font size back to our "baseline"
+            lyricsContainer.css('font-size', defaultFont + "pt");
 
             if (autoResize) {
                 // Loop while our lyrics box is taller than our window
