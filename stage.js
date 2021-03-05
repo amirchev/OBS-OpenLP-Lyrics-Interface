@@ -133,8 +133,8 @@ window.OpenLP = {
         } else if (data.type === "previousSlide") {
             $.get("/api/controller/live/previous");
         } else if (data.type === "lyrics") {
-            var lyricsContainer = $("#lyrics")
-            if (data.value.replaceAll("<br>", "").trim().length === 0) { //empty str
+            var lyricsContainer = $("#lyrics");
+            if (data.value.length <= 4) { //empty str
                 $("#lyrics").fadeOut(Number(fadeDuration));
                 emptyString = true;
             } else {
@@ -150,6 +150,7 @@ window.OpenLP = {
         }
         
         if (updateLayout) {
+            var lyricsContainer = $("#lyrics");
             // Reset font size back to our "baseline"
             lyricsContainer.css('font-size', defaultFont + "pt");
 
