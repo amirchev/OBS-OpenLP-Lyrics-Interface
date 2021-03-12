@@ -23,6 +23,8 @@ You're all done.
 To view the comprehensive guide with screenshots, go [here](https://obsproject.com/forum/resources/using-openlp-interface-for-lyrics.1009/).
 
 ## Features
+- Control slides from OBS with next/previous slide buttons.
+- Auto-resize feature for text larger than viewing window.
 - Option to hide lyrics when live view is hidden.
 - Hide lyrics toggle button.
 - Auto-show on slide change automatically displays the next slide, displaying the same number of lines as you have set on your **first** Display Next button. 
