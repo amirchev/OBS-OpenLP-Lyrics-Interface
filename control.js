@@ -12,6 +12,10 @@ var historyIndex = 0;
 var hiding = false;
 var fadeDuration = 900;
 
+var autoSplitLongLines = true;
+var maxCharacters = 60;
+var minWords = 3;
+
 openlpChannel.onmessage = function (ev) {
     var data = JSON.parse(ev.data);
     var type = data.type;
@@ -21,9 +25,20 @@ openlpChannel.onmessage = function (ev) {
         openlpChannel.postMessage(JSON.stringify({type: "hide", value: hiding}));
         openlpChannel.postMessage(JSON.stringify({type: "resize", value: autoResize}));
         openlpChannel.postMessage(JSON.stringify({type: "font", value: $("#lyrics-font-size-spinner").val()}));
+        openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: $("#superscripted-verse-numbers-checkbox").prop("checked")}));
     } else if (type === "lyrics") {
-        currentLines = data.lines;
+        
         lastDisplayedIndex = -1;
+
+        if ( autoSplitLongLines ) {
+            currentLines = Array();
+            $.each(data.lines, function (idx, longLine) {
+                currentLines = currentLines.concat(splitLines(longLine).split(/\n/g));
+            });
+        } else {
+            currentLines = data.lines;
+        }
+
         if ($("#auto-update-checkbox").prop("checked")) {
             if ($("#display-all-checkbox").prop("checked")) {
                 displayNext(currentLines.length);
@@ -39,6 +54,67 @@ openlpChannel.onmessage = function (ev) {
         }
     }
 };
+
+// Split lines into smaller ones that are no longer than maxCharacters, but at least minWords long
+// If minWords results in more than maxCharacters on a given line, that line will have fewer than minWords
+// If a word is longer than maxCharacters, it will be on its own line
+function splitLines(text) {
+    minWords=Math.max(1,minWords);
+
+    if ( text === undefined )
+        return "";
+    
+    var words = text.split(" ");
+    var lines = Array();
+    var line_words = Array();
+
+    
+    // Create the lines of words within the character constraint
+    for ( var i = 0; i < words.length; i++) {
+        new_word = Array(words[i]);
+        
+        // Add at least one word per line; otherwise no more words than allowed by maxCharactersr
+        if ( line_words.length > 1 && line_words.concat(new_word).join(" ").length > maxCharacters ) {
+            lines.push(line_words);
+            line_words = new_word;
+        } else {
+            line_words.push(words[i]);
+        }
+    }
+    lines.push(line_words);
+
+    var shifted=true;
+    // Work backwards to ensure we have enough words per line
+    for ( i = lines.length-1; i > 1 && shifted; i-- ) {
+        console.log("i: %s\nline: %s", i, lines[i].join("/"))
+        var shifted=false;
+        while ( lines[i].length < minWords ) {
+            if (lines[i-1].length == 0) {
+                window.alert("found an empty line!")
+                lines.splice(i-1,1);
+                i--;
+                if ( i < 1 ) break;
+            }
+
+            new_word=lines[i-1][lines[i-1].length-1];
+
+            if ( lines[i].join(" ").length + new_word.length + 1 < maxCharacters ) {
+                lines[i].unshift(lines[i-1].pop());
+                shifted=true;
+            } else {
+                break;
+            }
+        }
+    }
+
+
+    var lines_of_words=Array();
+    for ( i = 0; i<lines.length; i++) {
+        lines_of_words.push(lines[i].join(" "));
+    }
+
+    return lines_of_words.join("\n");
+}
 
 function displayNext(amount) {
     if (amount <= 0) {
@@ -138,6 +214,25 @@ function loadSettings() {
     if (loadedLyricsFont !== null) {
         $("#lyrics-font-size-spinner").val(Number(loadedLyricsFont));
     }
+    var loadedAutoSplitLongLines = window.localStorage.getItem("autoSplitLongLines");
+    if (loadedAutoSplitLongLines !== null) {
+        autoSplitLongLines = loadedAutoSplitLongLines;
+        $("#auto-split-long-lines-checkbox").prop("checked", loadedAutoSplitLongLines === "true");
+    }
+    var loadedMaxCharacters = window.localStorage.getItem("maxCharacters");
+    if (loadedMaxCharacters !== null) {
+        maxCharacters = loadedMaxCharacters;
+        $("#split-max-characters-spinner").val(Number(loadedMaxCharacters));
+    }
+    var loadedMinWords = window.localStorage.getItem("minWords");
+    if (loadedMinWords !== null) {
+        minWords = loadedMinWords;
+        $("#split-min-words-spinner").val(Number(loadedMinWords));
+    }
+    var loadedSuperscriptedVerseNumbers = window.localStorage.getItem("superscriptedVerseNumbers");
+    if (loadedSuperscriptedVerseNumbers !== null) {
+        $("#superscripted-verse-numbers-checkbox").prop("checked", loadedSuperscriptedVerseNumbers === "true");
+    }
     var loadedFadeDuration = window.localStorage.getItem("fadeDuration");
     if (loadedFadeDuration !== null) {
         fadeDuration = loadedFadeDuration;
@@ -179,6 +274,30 @@ $(function () {
         var font = $(this).val();
         updateFontSize(font);
         window.localStorage.setItem("controlFont", font);
+    });
+    $("#auto-split-long-lines-checkbox").change(function () {
+        autoSplitLongLines = $(this).prop("checked");
+        window.localStorage.setItem("autoSplitLongLines", autoSplitLongLines);
+        if (autoSplitLongLines) {
+            $("#split-max-characters").show();
+            $("#split-min-words").show();
+        } else {
+            $("#split-max-characters").hide();
+            $("#split-min-words").hide();
+        }
+    });
+    $("#split-max-characters-spinner").change(function () {
+        maxCharacters = $(this).val();
+        window.localStorage.setItem("maxCharacters", maxCharacters);
+    });
+    $("#split-min-words-spinner").change(function () {
+        minWords = $(this).val();
+        window.localStorage.setItem("minWords", minWords);
+    });
+    $("#superscripted-verse-numbers-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        window.localStorage.setItem("superscriptedVerseNumbers", checked);
+        openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: checked}));
     });
     $("#lyrics-font-size-spinner").change(function () {
         var font = $(this).val();
