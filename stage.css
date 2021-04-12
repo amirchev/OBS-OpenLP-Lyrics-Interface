@@ -10,8 +10,8 @@ body {
     align-items: center;
 }
 
-#lyrics {
-    width: fit-content; 
+#lyrics-0, #lyrics-1 {
+    width: fit-content;
     font-family: sans-serif;
     font-size: 36pt;
     color: white;
@@ -21,4 +21,9 @@ body {
     vertical-align: middle;
     position: fixed;
     bottom: 0;
+}
+
+#lyrics-1 {
+    opacity: 0;
+    z-index: -1;
 }
