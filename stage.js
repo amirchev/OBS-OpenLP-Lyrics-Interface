@@ -78,7 +78,7 @@ window.OpenLP = {
         obsChannel.postMessage(JSON.stringify({type: "lyrics", lines: text.split(/\n/g)}));
     },
     pollServer: function () {
-        var lyricsContainer = $("#lyrics-"+lyricsContainerIndex);
+        var lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
         $.getJSON(
                 "/api/poll",
                 function (data, status) {
@@ -116,7 +116,7 @@ window.OpenLP = {
             return;
         }
         var updateLayout = false;
-        var lyricsContainer = $("#lyrics-"+lyricsContainerIndex);
+        var lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
         var data = JSON.parse(ev.data);
         if (data.type === "hide") {
             alwaysHide = data.value;
@@ -151,7 +151,7 @@ window.OpenLP = {
                         }
                     }
                 } else {
-                    var nextLyricsContainer = $("#lyrics-"+(lyricsContainerIndex + 1) % 2);
+                    var nextLyricsContainer = $(".lyrics").eq((lyricsContainerIndex + 1) % 2);
                     nextLyricsContainer.html(data.value);
                     lyricsContainer.fadeTo(Number(crossfadeDuration),0);
                     nextLyricsContainer.fadeTo(Number(crossfadeDuration),1);

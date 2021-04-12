@@ -10,7 +10,7 @@ body {
     align-items: center;
 }
 
-#lyrics-0, #lyrics-1 {
+.lyrics {
     width: fit-content;
     font-family: sans-serif;
     font-size: 36pt;
@@ -23,7 +23,7 @@ body {
     bottom: 0;
 }
 
-#lyrics-1 {
+.lyrics:nth-child(2) {
     opacity: 0;
     z-index: -1;
 }
