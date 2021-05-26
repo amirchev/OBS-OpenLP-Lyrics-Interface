@@ -10,6 +10,7 @@ var pastPreviews = [];
 var historyIndex = 0;
 
 var hiding = false;
+var crossfadeDuration = 500;
 var fadeDuration = 900;
 
 var autoSplitLongLines = true;
@@ -21,6 +22,7 @@ openlpChannel.onmessage = function (ev) {
     var type = data.type;
     if (type === "init") {
         openlpChannel.postMessage(JSON.stringify({type: "hideOnBlank", value: $("#auto-hide-checkbox").prop("checked")}));
+        openlpChannel.postMessage(JSON.stringify({type: "crossfadeDuration", value: crossfadeDuration}));
         openlpChannel.postMessage(JSON.stringify({type: "fadeDuration", value: fadeDuration}));
         openlpChannel.postMessage(JSON.stringify({type: "hide", value: hiding}));
         openlpChannel.postMessage(JSON.stringify({type: "resize", value: autoResize}));
@@ -214,6 +216,11 @@ function loadSettings() {
     if (loadedLyricsFont !== null) {
         $("#lyrics-font-size-spinner").val(Number(loadedLyricsFont));
     }
+    var loadedCrossfadeDuration = window.localStorage.getItem("crossfadeDuration");
+    if (loadedCrossfadeDuration !== null) {
+        crossfadeDuration = loadedCrossfadeDuration;
+        $("#crossfade-duration-spinner").val(Number(crossfadeDuration));
+
     var loadedAutoSplitLongLines = window.localStorage.getItem("autoSplitLongLines");
     if (loadedAutoSplitLongLines !== null) {
         autoSplitLongLines = loadedAutoSplitLongLines;
@@ -303,6 +310,11 @@ $(function () {
         var font = $(this).val();
         window.localStorage.setItem("lyricsFont", font);
         openlpChannel.postMessage(JSON.stringify({type: "font", value: font}));
+    });
+    $("#crossfade-duration-spinner").change(function () {
+        crossfadeDuration = $(this).val();
+        window.localStorage.setItem("crossfadeDuration", crossfadeDuration);
+        openlpChannel.postMessage(JSON.stringify({type: "crossfadeDuration", value: crossfadeDuration}));
     });
     $("#fade-duration-spinner").change(function () {
         fadeDuration = $(this).val();

@@ -87,6 +87,7 @@ window.OpenLP = {
         obsChannel.postMessage(JSON.stringify({type: "lyrics", lines: text.split(/\n/g)}));
     },
     pollServer: function () {
+        var lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
         $.getJSON(
                 "/api/poll",
                 function (data, status) {
@@ -105,13 +106,13 @@ window.OpenLP = {
                             || data.results.blank === true;
                     if (blankScreen && hideOnBlankScreen || alwaysHide) {
                         if (!lyricsHidden) {
-                            $("#lyrics").fadeOut(Number(fadeDuration));
+                            lyricsContainer.fadeOut(fadeDuration);
                             lyricsHidden = true;
                         }
                     } else {
                         if (lyricsHidden) {
                             if (!emptyString) {
-                                $("#lyrics").fadeIn(Number(fadeDuration));
+                                lyricsContainer.fadeIn(fadeDuration);
                             }
                             lyricsHidden = false;
                         }
@@ -124,13 +125,16 @@ window.OpenLP = {
             return;
         }
         var updateLayout = false;
+        var lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
         var data = JSON.parse(ev.data);
         if (data.type === "hide") {
             alwaysHide = data.value;
         } else if (data.type === "hideOnBlank") {
             hideOnBlankScreen = data.value;
         } else if (data.type === "fadeDuration") {
-            fadeDuration = data.value;
+            fadeDuration = Number(data.value);
+        } else if (data.type === "crossfadeDuration") {
+            crossfadeDuration = Number(data.value);
         } else if (data.type === "resize") {
             autoResize = data.value;
             updateLayout = true;
@@ -144,24 +148,33 @@ window.OpenLP = {
         } else if (data.type === "previousSlide") {
             $.get("/api/controller/live/previous");
         } else if (data.type === "lyrics") {
-            var lyricsContainer = $("#lyrics");
+
             if (data.value.length <= 4) { //empty str
-                $("#lyrics").fadeOut(Number(fadeDuration));
+                lyricsContainer.fadeOut(fadeDuration);
                 emptyString = true;
             } else {
-                lyricsContainer.html(data.value);
-                if (emptyString) {
-                    emptyString = false;
-                    if (!lyricsHidden) {
-                        $("#lyrics").fadeIn(Number(fadeDuration));
+                if (crossfadeDuration == 0 || emptyString ) {
+                    lyricsContainer.html(data.value);
+                    if (emptyString) {
+                        emptyString = false;
+                        if (!lyricsHidden) {
+                            lyricsContainer.fadeIn(fadeDuration);
+                        }
                     }
+                } else {
+                    var nextLyricsContainer = $(".lyrics").eq((lyricsContainerIndex + 1) % 2);
+                    nextLyricsContainer.html(data.value);
+                    lyricsContainer.fadeTo(Number(crossfadeDuration),0);
+                    nextLyricsContainer.fadeTo(Number(crossfadeDuration),1);
+
+                    lyricsContainerIndex = (lyricsContainerIndex + 1) % 2;
+                    lyricsContainer = nextLyricsContainer;
                 }
             }
             updateLayout = true;
         }
         
         if (updateLayout) {
-            var lyricsContainer = $("#lyrics");
             // Reset font size back to our "baseline"
             lyricsContainer.css('font-size', defaultFont + "pt");
 
@@ -187,6 +200,8 @@ var hideOnBlankScreen = false;
 var lyricsHidden = false;
 var emptyString = false;
 var alwaysHide = false;
+var crossfadeDuration = 500;
+var lyricsContainerIndex = 0;
 var fadeDuration = 900;
 
 var autoResize = false;
