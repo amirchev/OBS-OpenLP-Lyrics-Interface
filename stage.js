@@ -72,7 +72,16 @@ window.OpenLP = {
         if (slide["title"]) {
             text = slide["title"];
         } else {
-            text = slide["text"];
+            if (superscriptedVerseNumbers) {
+                text = slide["html"]
+                    .replace("[","&#91;")
+                    .replace("]","&#92;")
+                    .replace(RegExp('/<(\/?)sup>/[\1sup]/gi'))
+                    .replace(RegExp('/<\/?[^>]+>//gi'))
+                    .replace(RegExp('/\[(\/?)sup\]/<\1sup>/gi'));
+            } else {
+                text = slide["text"];
+            }
         }
         //text = text.replace(/\n/g, "<br />");
         obsChannel.postMessage(JSON.stringify({type: "lyrics", lines: text.split(/\n/g)}));
@@ -132,6 +141,8 @@ window.OpenLP = {
         } else if (data.type === "font") {
             defaultFont = data.value;
             updateLayout = true;
+        } else if (data.type === "superscriptedVerseNumbers") {
+            superscriptedVerseNumbers = data.value;
         } else if (data.type === "nextSlide") {
             $.get("/api/controller/live/next");
         } else if (data.type === "previousSlide") {
@@ -194,6 +205,7 @@ var lyricsContainerIndex = 0;
 var fadeDuration = 900;
 
 var autoResize = false;
+var superscriptedVerseNumbers = true;
 var defaultFont = 36;
 
 obsChannel.onmessage = OpenLP.channelReceive;
