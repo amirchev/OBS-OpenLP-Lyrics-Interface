@@ -29,10 +29,10 @@ openlpChannel.onmessage = function (ev) {
         openlpChannel.postMessage(JSON.stringify({type: "font", value: $("#lyrics-font-size-spinner").val()}));
         openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: $("#superscripted-verse-numbers-checkbox").prop("checked")}));
     } else if (type === "lyrics") {
-        
+
         lastDisplayedIndex = -1;
 
-        if ( autoSplitLongLines ) {
+        if (autoSplitLongLines) {
             currentLines = Array();
             $.each(data.lines, function (idx, longLine) {
                 currentLines = currentLines.concat(splitLines(longLine).split(/\n/g));
@@ -61,22 +61,22 @@ openlpChannel.onmessage = function (ev) {
 // If minWords results in more than maxCharacters on a given line, that line will have fewer than minWords
 // If a word is longer than maxCharacters, it will be on its own line
 function splitLines(text) {
-    minWords=Math.max(1,minWords);
+    minWords = Math.max(1, minWords);
 
-    if ( text === undefined )
+    if (text === undefined)
         return "";
-    
+
     var words = text.split(" ");
     var lines = Array();
     var line_words = Array();
 
-    
+
     // Create the lines of words within the character constraint
-    for ( var i = 0; i < words.length; i++) {
+    for (var i = 0; i < words.length; i++) {
         new_word = Array(words[i]);
-        
+
         // Add at least one word per line; otherwise no more words than allowed by maxCharactersr
-        if ( line_words.length > 1 && line_words.concat(new_word).join(" ").length > maxCharacters ) {
+        if (line_words.length > 1 && line_words.concat(new_word).join(" ").length > maxCharacters) {
             lines.push(line_words);
             line_words = new_word;
         } else {
@@ -85,24 +85,25 @@ function splitLines(text) {
     }
     lines.push(line_words);
 
-    var shifted=true;
+    var shifted = true;
     // Work backwards to ensure we have enough words per line
-    for ( i = lines.length-1; i > 1 && shifted; i-- ) {
+    for (i = lines.length - 1; i > 1 && shifted; i--) {
         console.log("i: %s\nline: %s", i, lines[i].join("/"))
-        var shifted=false;
-        while ( lines[i].length < minWords ) {
-            if (lines[i-1].length == 0) {
+        var shifted = false;
+        while (lines[i].length < minWords) {
+            if (lines[i - 1].length == 0) {
                 window.alert("found an empty line!")
-                lines.splice(i-1,1);
+                lines.splice(i - 1, 1);
                 i--;
-                if ( i < 1 ) break;
+                if (i < 1)
+                    break;
             }
 
-            new_word=lines[i-1][lines[i-1].length-1];
+            new_word = lines[i - 1][lines[i - 1].length - 1];
 
-            if ( lines[i].join(" ").length + new_word.length + 1 < maxCharacters ) {
-                lines[i].unshift(lines[i-1].pop());
-                shifted=true;
+            if (lines[i].join(" ").length + new_word.length + 1 < maxCharacters) {
+                lines[i].unshift(lines[i - 1].pop());
+                shifted = true;
             } else {
                 break;
             }
@@ -110,8 +111,8 @@ function splitLines(text) {
     }
 
 
-    var lines_of_words=Array();
-    for ( i = 0; i<lines.length; i++) {
+    var lines_of_words = Array();
+    for (i = 0; i < lines.length; i++) {
         lines_of_words.push(lines[i].join(" "));
     }
 
@@ -220,7 +221,7 @@ function loadSettings() {
     if (loadedCrossfadeDuration !== null) {
         crossfadeDuration = loadedCrossfadeDuration;
         $("#crossfade-duration-spinner").val(Number(crossfadeDuration));
-
+    }
     var loadedAutoSplitLongLines = window.localStorage.getItem("autoSplitLongLines");
     if (loadedAutoSplitLongLines !== null) {
         autoSplitLongLines = loadedAutoSplitLongLines;
@@ -285,6 +286,7 @@ $(function () {
     $("#auto-split-long-lines-checkbox").change(function () {
         autoSplitLongLines = $(this).prop("checked");
         window.localStorage.setItem("autoSplitLongLines", autoSplitLongLines);
+        //TODO: auto-update control & stage
         if (autoSplitLongLines) {
             $("#split-max-characters").show();
             $("#split-min-words").show();
