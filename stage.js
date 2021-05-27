@@ -64,7 +64,7 @@ window.OpenLP = {
         // Then leave a blank line between following verses
         if (OpenLP.currentSlides == undefined) {
             // Bail if we're not fully initialized yet
-            return
+            return;
         }
         var slide = OpenLP.currentSlides[OpenLP.currentSlide];
         var text = "";
@@ -74,11 +74,11 @@ window.OpenLP = {
         } else {
             if (superscriptedVerseNumbers) {
                 text = slide["html"]
-                    .replace("[","&#91;")
-                    .replace("]","&#92;")
-                    .replace(RegExp('/<(\/?)sup>/[\1sup]/gi'))
-                    .replace(RegExp('/<\/?[^>]+>//gi'))
-                    .replace(RegExp('/\[(\/?)sup\]/<\1sup>/gi'));
+                        //.replace("[","&#91;")
+                        //.replace("]","&#92;")
+                        .replace(RegExp('/<(\/?)sup>/[\1sup]/gi'))
+                        .replace(RegExp('/<\/?[^>]+>//gi'))
+                        .replace(RegExp('/\[(\/?)sup\]/<\1sup>/gi'));
             } else {
                 text = slide["text"];
             }
@@ -153,7 +153,7 @@ window.OpenLP = {
                 lyricsContainer.fadeOut(fadeDuration);
                 emptyString = true;
             } else {
-                if (crossfadeDuration == 0 || emptyString ) {
+                if (crossfadeDuration == 0 || emptyString) {
                     lyricsContainer.html(data.value);
                     if (emptyString) {
                         emptyString = false;
@@ -164,8 +164,8 @@ window.OpenLP = {
                 } else {
                     var nextLyricsContainer = $(".lyrics").eq((lyricsContainerIndex + 1) % 2);
                     nextLyricsContainer.html(data.value);
-                    lyricsContainer.fadeTo(Number(crossfadeDuration),0);
-                    nextLyricsContainer.fadeTo(Number(crossfadeDuration),1);
+                    lyricsContainer.fadeTo(Number(crossfadeDuration), 0);
+                    nextLyricsContainer.fadeTo(Number(crossfadeDuration), 1);
 
                     lyricsContainerIndex = (lyricsContainerIndex + 1) % 2;
                     lyricsContainer = nextLyricsContainer;
@@ -173,7 +173,7 @@ window.OpenLP = {
             }
             updateLayout = true;
         }
-        
+
         if (updateLayout) {
             // Reset font size back to our "baseline"
             lyricsContainer.css('font-size', defaultFont + "pt");
