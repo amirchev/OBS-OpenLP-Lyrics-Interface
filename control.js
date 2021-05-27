@@ -226,6 +226,10 @@ function loadSettings() {
     if (loadedAutoSplitLongLines !== null) {
         autoSplitLongLines = loadedAutoSplitLongLines;
         $("#auto-split-long-lines-checkbox").prop("checked", loadedAutoSplitLongLines === "true");
+        if (autoSplitLongLines !== "true") {
+            $("#split-max-characters").hide();
+            $("#split-min-words").hide();
+        }
     }
     var loadedMaxCharacters = window.localStorage.getItem("maxCharacters");
     if (loadedMaxCharacters !== null) {
