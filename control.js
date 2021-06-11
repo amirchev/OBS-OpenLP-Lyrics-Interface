@@ -66,42 +66,61 @@ function splitLines(text) {
     if (text === undefined)
         return "";
 
-    var words = text.split(" ");
+    var newText = '';
+    var inTag = false;
+    // Don't split in the middle of HTML tag definitions
+    $.each(text.split(), function(idx, char) {
+        if (char == ' ' && !inTag) {
+            newText += '__SPACE__';
+        } else {
+            if (char == '<') {
+                inTag = true;
+            } else if (char == '>') {
+                inTag = false;
+            }
+            newText += char;
+        }
+    });
+    var words = text = newText.split('__SPACE__');
     var lines = Array();
-    var line_words = Array();
-
+    var lineWords = Array();
+    // We need to keep a length of the line that doesn't include any tags
+    var lineWordsLength = 0;
 
     // Create the lines of words within the character constraint
     for (var i = 0; i < words.length; i++) {
-        new_word = Array(words[i]);
+        let newWord = Array(words[i]);
+
+        // Don't count HTML tags in overall word length
+        let wordLength = newWord.replace(/<[^>]+>/gi, '').length;
 
         // Add at least one word per line; otherwise no more words than allowed by maxCharactersr
-        if (line_words.length > 1 && line_words.concat(new_word).join(" ").length > maxCharacters) {
-            lines.push(line_words);
-            line_words = new_word;
+        if (lineWords.length > 1 && lineWordsLength + 1 + wordLength > maxCharacters) {
+            lines.push(lineWords);
+            lineWords = newWord;
+            lineWordsLength = wordLength;
         } else {
-            line_words.push(words[i]);
+            lineWords.push(words[i]);
+            lineWordsLength += 1 + wordLength;
         }
     }
-    lines.push(line_words);
+    lines.push(lineWords);
 
     var shifted = true;
     // Work backwards to ensure we have enough words per line
     for (i = lines.length - 1; i > 1 && shifted; i--) {
-        console.log("i: %s\nline: %s", i, lines[i].join("/"))
         var shifted = false;
         while (lines[i].length < minWords) {
             if (lines[i - 1].length == 0) {
-                window.alert("found an empty line!")
                 lines.splice(i - 1, 1);
                 i--;
                 if (i < 1)
                     break;
             }
 
-            new_word = lines[i - 1][lines[i - 1].length - 1];
+            newWord = lines[i - 1][lines[i - 1].length - 1];
 
-            if (lines[i].join(" ").length + new_word.length + 1 < maxCharacters) {
+            if (lines[i].join(" ").replace(/<[^>]+>/gi, '').length + newWord.replace(/<[^>]+>/gi, '').length + 1 < maxCharacters) {
                 lines[i].unshift(lines[i - 1].pop());
                 shifted = true;
             } else {
@@ -111,12 +130,12 @@ function splitLines(text) {
     }
 
 
-    var lines_of_words = Array();
+    var linesOfWords = Array();
     for (i = 0; i < lines.length; i++) {
-        lines_of_words.push(lines[i].join(" "));
+        linesOfWords.push(lines[i].join(" "));
     }
 
-    return lines_of_words.join("\n");
+    return linesOfWords.join("\n");
 }
 
 function displayNext(amount) {
