@@ -185,7 +185,7 @@ window.OpenLP = {
             }
         }
     },
-    filterTags: function(string, tags) {
+    filterTags: function (string, tags) {
         string = string
             // <br> comes through. Change to \n to preserve them and make line-counting accurate
             .replace(/<br>/gi, "\n")
@@ -200,7 +200,7 @@ window.OpenLP = {
 
         string = string
             // remove remaining HTML tags
-            .replace(/<\/?[^>]+>/gi, '')
+            .replace(/<[^>]+>/g, '')
             // restore the tags we preserved
             .replace(/\[(\/?)([^\]]+)\]/gi, '<$1$2>');
 

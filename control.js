@@ -65,11 +65,12 @@ function splitLines(text) {
 
     if (text === undefined)
         return "";
-
+    
+    // Don't split in the middle of HTML tag definitions
+    var characters = Array.from(text);
     var newText = '';
     var inTag = false;
-    // Don't split in the middle of HTML tag definitions
-    $.each(text.split(), function(idx, char) {
+    $.each(characters, function(idx, char) {
         if (char == ' ' && !inTag) {
             newText += '__SPACE__';
         } else {
@@ -81,23 +82,21 @@ function splitLines(text) {
             newText += char;
         }
     });
-    var words = text = newText.split('__SPACE__');
+    var words = newText.split('__SPACE__');
+
     var lines = Array();
     var lineWords = Array();
-    // We need to keep a length of the line that doesn't include any tags
+    // Length of the line, not including any tags
     var lineWordsLength = 0;
 
     // Create the lines of words within the character constraint
     for (var i = 0; i < words.length; i++) {
-        let newWord = Array(words[i]);
+        let wordLength = words[i].replace(/<[^>]+>/g, '').length;
 
-        // Don't count HTML tags in overall word length
-        let wordLength = newWord.replace(/<[^>]+>/gi, '').length;
-
-        // Add at least one word per line; otherwise no more words than allowed by maxCharactersr
+        // Add at least one word per line; otherwise no more words than allowed by maxCharacters
         if (lineWords.length > 1 && lineWordsLength + 1 + wordLength > maxCharacters) {
             lines.push(lineWords);
-            lineWords = newWord;
+            lineWords = Array(words[i]);
             lineWordsLength = wordLength;
         } else {
             lineWords.push(words[i]);
@@ -106,8 +105,8 @@ function splitLines(text) {
     }
     lines.push(lineWords);
 
-    var shifted = true;
     // Work backwards to ensure we have enough words per line
+    var shifted = true;
     for (i = lines.length - 1; i > 1 && shifted; i--) {
         var shifted = false;
         while (lines[i].length < minWords) {
@@ -120,7 +119,7 @@ function splitLines(text) {
 
             newWord = lines[i - 1][lines[i - 1].length - 1];
 
-            if (lines[i].join(" ").replace(/<[^>]+>/gi, '').length + newWord.replace(/<[^>]+>/gi, '').length + 1 < maxCharacters) {
+            if (lines[i].join(" ").replace(/<[^>]+>/g, '').length + newWord.replace(/<[^>]+>/g, '').length + 1 < maxCharacters) {
                 lines[i].unshift(lines[i - 1].pop());
                 shifted = true;
             } else {
