@@ -1,0 +1,36 @@
+{
+	"@metadata": {
+		"authors": [
+			"Mark Rogers"
+		],
+		"last-updated": "2021-06-12",
+		"locale": "en",
+		"other-metadata": ""
+	},
+	"title": "The title that will be displayed in the header bar",
+	"display-next": "This button preceeds a number spinner allowing the user to select how many lines to display",
+	"display-remaining": "This button allows the user to display the rest of the lines on the current slide",
+	"undo-display": "This button allows the user to go back to whatever was previously displayed",
+	"redo-display": "After using the 'undo display' button, this button allows the user to display what follows",
+	"hide-display": "This button makes the stage go blank (transparent)",
+	"previous-slide": "This button tells OpenLP to go to the previous slide",
+	"next-slide": "This button tells OpenLP to go to the next slide",
+	"auto-update-text": "Option to automatically update the text shown on the stage when OpenLP changes its displayed content",
+	"display-all-text": "Option to always show all the lines on the slide being shown by OpenLP",
+	"auto-hide-on-blank": "Option to automatically hide the stage when OpenLP goes to a blank-screen option (and show again when OpenLP does)",
+	"auto-resize-text": "Option to change the text's font size automatically so that it fits in the window",
+	"auto-split-long-lines": "Option to automatically split long lines based on maximum characters and minimum words",
+	"max-characters-per-line": "When automatically splitting long lines, this option determines how many characters at most are allowed per line",
+	"min-words-per-line": "When automatically splitting long lines, this option determines the minimum number of words per line",
+	"small-verse-numbers": "Option to show superscripted verse numbers",
+	"settings": "Heading for section of settings",
+	"current-slide": "Label for the text of the currently shown slide",
+	"button-size": "Option to allow for different sized buttons",
+	"normal": "Option to choose a normal button size",
+	"large": "Option to choose a larger-than-normal button size",
+	"larger": "Option to choose the largest available button size",
+	"font-size-control": "Option to change the font size of the control window",
+	"font-size-lyrics": "Option to change the font size of the stage",
+	"crossfade-duration": "Option to change the length (in milliseconds) of crossfades",
+	"fade-duration": "Option to choose how long (in milliseconds) a fade-out or fade-in transition will take"
+}

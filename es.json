@@ -1,0 +1,36 @@
+{
+	"@metadata": {
+		"authors": [
+            "Mark Rogers"
+		],
+		"last-updated": "2021-06-12",
+		"locale": "es",
+		"other-metadata": ""
+	},
+    "title": "Control de OpenLP",
+    "display-next": "Mostrar siguiente(s)",
+    "display-remaining": "Mostrar faltantes",
+    "undo-display": "Deshacer vista",
+    "redo-display": "Re-hacer vista",
+    "hide-display": "Ocultar pantalla",
+    "previous-slide": "Diapositiva anterior",
+    "next-slide": "Diapositiva siguiente",
+    "auto-update-text": "Actualizar texto automáticamente con el cambio de diapositiva",
+    "display-all-text": "Mostrar todo el texto",
+    "auto-hide-on-blank": "Ocultar automáticamente cuando se coloca la pantalla en blanco",
+    "auto-resize-text": "Ajustar el tamaño del texto cuando no cabe en la ventana",
+    "auto-split-long-lines": "Partir líneas largas automáticamente",
+    "max-characters-per-line": "Número máximo de carácteres por línea",
+    "min-words-per-line": "Número mínimo de palabras por línea",
+    "small-verse-numbers": "Mostrar los números de versículos con fuente pequeña",
+    "settings": "Configuraciones",
+    "button-size": "Tamaño de botones",
+    "current-slide": "Diapositiva actual:",
+    "normal": "Normal",
+    "large": "Grande",
+    "larger": "Más grande",
+    "font-size-control": "Tamaño de fuente de la ventana de control",
+    "font-size-lyrics": "Tamaño de fuente de la letra",
+    "crossfade-duration": "Duración del crossfade",
+    "fade-duration": "Duración de transición estilo desvanecimiento"
+}
