@@ -1,0 +1,36 @@
+{
+	"author": "Santhosh Thottingal",
+	"name": "cldrpluralruleparser",
+	"description": "Node module to find out the plural form for a given number in a language by parsing CLDR plural form rules.",
+	"version": "1.4.0",
+	"repository": {
+		"url": "https://github.com/santhoshtr/CLDRPluralRuleParser"
+	},
+	"bin": {
+		"cldrpluralruleparser": "./bin/cldrpluralruleparser.js"
+	},
+	"browser": "dist/cldrpluralruleparser.js",
+	"main": "dist/cldrpluralruleparser.cjs.js",
+	"module": "dist/cldrpluralruleparser.esm.js",
+	"license": "MIT",
+	"devDependencies": {
+		"cldr-data": "^36.0.0",
+		"esbuild": "^0.11.16",
+		"eslint": "^7.25.0",
+		"eslint-config-standard": "^16.0.2",
+		"eslint-plugin-import": "^2.20.2",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^4.2.1",
+		"eslint-plugin-standard": "^5.0.0",
+		"esm": "^3.2.25",
+		"mocha": "^8.4.0",
+		"mocha-eslint": "^7.0.0",
+		"rollup": "^2.46.0",
+		"rollup-plugin-esbuild": "^4.2.3"
+	},
+	"scripts": {
+		"test": "mocha test/*.test.js",
+		"lint": "eslint src test",
+		"build": "rollup -c"
+	}
+}
