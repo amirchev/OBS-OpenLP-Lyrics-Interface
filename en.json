@@ -1,0 +1,37 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aleksandr Mirchev",
+			"Mark Rogers"
+		],
+		"last-updated": "2021-06-12",
+		"locale": "en",
+		"other-metadata": ""
+	},
+	"title": "OpenLP Lyrics Control",
+	"display-next": "Display next",
+	"display-remaining": "Display remaining",
+	"undo-display": "Undo display",
+	"redo-display": "Redo display",
+	"hide-display": "Hide display",
+	"previous-slide": "Previous slide",
+	"next-slide": "Next slide",
+	"auto-update-text": "Auto-update text on slide change",
+	"display-all-text": "Display all text",
+	"auto-hide-on-blank": "Auto-hide when blank screen displayed",
+	"auto-resize-text": "Resize text that doesn't fit in window",
+	"auto-split-long-lines": "Automatically split long lines",
+	"max-characters-per-line": "Maximum characters per line",
+	"min-words-per-line": "Minimum words per line",
+	"small-verse-numbers": "Small verse numbers",
+	"button-size": "Button size",
+	"current-slide": "Current Slide:",
+	"settings": "Settings",
+	"normal": "Normal",
+	"large": "Large",
+	"larger": "Larger",
+	"font-size-control": "Control window font size",
+	"font-size-lyrics": "Lyrics font size",
+	"crossfade-duration": "Crossfade duration",
+	"fade-duration": "Fade in/out duration"
+}

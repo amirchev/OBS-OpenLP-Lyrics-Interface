@@ -1,109 +1,120 @@
-<html dir="ltr"><head>
-        <title>OpenLP Lyrics Control</title>
+<html dir="ltr">
+    <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="control.css">
         <script type="text/javascript" src="/files/jquery.min.js"></script>
         <script type="text/javascript" src="control.js"></script>
+        <script src="jquery.i18n/libs/CLDRPluralRuleParser-subtree/src/CLDRPluralRuleParser.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.messagestore.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.fallbacks.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.language.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.parser.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.emitter.js"></script>
+        <script src="jquery.i18n/src/jquery.i18n.emitter.bidi.js"></script>
+        <script src="i18n.js"></script>
+        <title data-i18n="title">OpenLP Lyrics Control</title>
     </head>
     <body>
         <div class="controls-container">
             <div class="floating">
                 <div class="control-group custom-width">
-                    <button id="increment-button-1" type="button">Display next</button>
+                <button id="increment-button-1" type="button" data-i18n="display-next">Display next</button>
                     <input id="increment-spinner-1" type="number" min="1" step="1" value="1" size="2">
-                    <button id="increment-button-2">Display next</button>
+                <button id="increment-button-2" data-i18n="display-next">Display next</button>
                     <input id="increment-spinner-2" type="number" min="1" step="1" value="1" size="2">
                 </div>
             </div>
             <div class="floating">
-                <div class="control-group"><button id="remaining-button" type="button">Display remaining</button></div>
+            <div class="control-group"><button id="remaining-button" type="button" data-i18n="display-remaining">Display remaining</button></div>
             </div>
             <div class="floating">
                 <div class="control-group">
-                    <button id="undo-button" type="button">Undo display</button>
-                    <button id="redo-button" type="button">Redo display</button>
+                <button id="undo-button" type="button" data-i18n="undo-display">Undo display</button>
+                <button id="redo-button" type="button" data-i18n="redo-display">Redo display</button>
                 </div>
             </div>
             <div class="floating">
                 <div class="control-group">
-                    <button id="hide-button" type="button">Hide display</button>
+                <button id="hide-button" type="button" data-i18n="hide-display">Hide display</button>
                 </div>
             </div>
             <div class="floating">
                 <div class="control-group">
-                    <button id="previous-button" type="button">Previous slide</button>
-                    <button id="next-button" type="button">Next slide</button>
+                <button id="previous-button" type="button" data-i18n="previous-slide">Previous slide</button>
+                <button id="next-button" type="button" data-i18n="next-slide">Next slide</button>
                 </div>
             </div>
             <div class="floating">
                 <div class="control-group">
                     <input id="auto-update-checkbox" type="checkbox">
-                    <label for="auto-update-checkbox">Auto-update text on slide change</label>
+                <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
                 </div>
                 <div class="control-group">
                     <input id="display-all-checkbox" type="checkbox">
-                    <label for="display-all-checkbox">Display all text</label>
+                <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
                 </div>
                 <div class="control-group">
                     <input id="auto-hide-checkbox" type="checkbox">
-                    <label for="auto-hide-checkbox">Auto-hide when blank screen displayed</label>
+                <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
                 </div>
                 <div class="control-group">
                     <input id="resize-checkbox" type="checkbox">
-                    <label for="resize-checkbox">Resize text that doesn't fit in window</label>
+                    <label for="resize-checkbox" data-i18n="auto-resize-text">Resize text that doesn't fit in window</label>
                 </div>
 
                 <div class="control-group">
                     <div class="control-group">
                         <input id="auto-split-long-lines-checkbox" type="checkbox" checked="true">
-                        <label for="auto-split-long-lines-checkbox">Automatically split long lines</label>
+                    <label for="auto-split-long-lines-checkbox" data-i18n="auto-split-long-lines">Automatically split long lines</label>
                     </div>
                     <div class="control-group" id="split-max-characters">
-                        <label for="split-max-characters-spinner">Maximum characters per line</label><br>
+                    <label for="split-max-characters-spinner" data-i18n="max-characters-per-line">Maximum characters per line</label><br>
                         <input id="split-max-characters-spinner" type="number" min="10" max="200" step="5" value="60" size="3">
                     </div>
                     <div class="control-group" id="split-min-words">
-                        <label for="split-min-words-spinner">Minimum words per line</label><br>
+                    <label for="split-min-words-spinner" data-i18n="min-words-per-line">Minimum words per line</label><br>
                         <input id="split-min-words-spinner" type="number" min="1" max="20" step="1" value="3" size="2">
                     </div>
                 </div>
                 <div class="control-group">
                     <input id="superscripted-verse-numbers-checkbox" type="checkbox" checked="true">
-                    <label for="superscripted-verse-numbers-checkbox">Small verse numbers</label>
+                <label for="superscripted-verse-numbers-checkbox" data-i18n="small-verse-numbers">Small verse numbers</label>
                 </div>
             </div>
             <div class="floating">
-                <h6>Current slide:</h6>
+            <h6 data-i18n="current-slide">Current slide:</h6>
                 <div id="slide-text">
                 </div>
             </div>
             <div class="floating">
-                <h6>Settings</h6>
+                <h6 data-i18n="settings">Settings</h6>
                 <div class="control-group">
-                    <span>Button size</span><br>
+                <label for="button-height-select" data-i18n="button-size">Button size</label><br>
                     <select id="button-height-select">
-                        <option>Normal</option>
-                        <option>Large</option>
-                        <option>Larger</option>
+                        <option value="Normal" data-i18n="normal">Normal</option>
+                        <option value="Large" data-i18n="large">Large</option>
+                        <option value="Larger" data-i18n="larger">Larger</option>
                     </select>
                 </div>
                 <div class="control-group">
-                    <span>Control window font size</span><br>
+                    <label for="control-font-size-spinner" data-i18n="font-size-control">Control window font size</label><br>
                     <input id="control-font-size-spinner" type="number" min="9" max="36" step="1" value="9" size="2">
                 </div>
                 <div class="control-group">
-                    <span>Lyrics font size</span><br>
+                    <label for="lyrics-font-size-spinner" data-i18n="font-size-lyrics">Lyrics font size</label><br>
                     <input id="lyrics-font-size-spinner" type="number" min="0" max="128" step="1" value="36" size="2">
                 </div>
                 <div class="control-group">
-                    <label for="crossfade-duration-spinner">Crossfade duration</label><br>
+                    <label for="crossfade-duration-spinner" data-i18n="crossfade-duration">Crossfade duration</label><br>
                     <input id="crossfade-duration-spinner" type="number" min="0" max="3000" step="100" value="500" size="4">
                 </div>
                 <div class="control-group">
-                    <span>Fade in/out duration</span><br>
+                    <label for="fade-duration-spinner" data-i18n="fade-duration">Fade in/out duration</label><br>
                     <input id="fade-duration-spinner" type="number" min="0" max="3000" step="100" value="900" size="4">
                 </div>
             </div>
         </div>
-    </body></html>
+    </body>
+</html>
