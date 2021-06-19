@@ -68,17 +68,51 @@ window.OpenLP = {
         }
         var slide = OpenLP.currentSlides[OpenLP.currentSlide];
         var text = "";
+        var tags = new Array();
         // use title if available
         if (slide["title"]) {
             text = slide["title"];
         } else {
-            if (superscriptedVerseNumbers) {
-                text = OpenLP.filterTags(slide["html"], new Array('sup'));
+            if (textFormatting['all'] === true) {
+                tags.push('all');
+            } else {
+                $.each(textFormatting, function (key, val) {
+                    if (val === true) {
+                        switch (key) {
+                            case 'bold':
+                                tags.push('strong');
+                                break;
+                            case 'italics':
+                                tags.push('em');
+                                break;
+                            case 'underline':
+                                tags.push('span style="text-decoration: underline');
+                                break;
+                            case 'colors':
+                                tags.push('span style="-webkit-text-fill-color');
+                                break;
+                            case 'subscript':
+                                tags.push('sup');
+                                break;
+                            case 'subscript':
+                                tags.push('sub');
+                                break;
+                            case 'paragraph':
+                                tags.push('p');
+                                break;
+                        }
+                        console.log(key+": "+val);
+                    }
+                });
+            }
+
+            if (tags.length > 0) {
+                text = OpenLP.filterTags(slide["html"], tags);
             } else {
                 text = slide["text"];
             }
         }
-        //text = text.replace(/\n/g, "<br />");
+
         obsChannel.postMessage(JSON.stringify({type: "lyrics", lines: text.split(/\n/g)}));
     },
     pollServer: function () {
@@ -136,6 +170,8 @@ window.OpenLP = {
         } else if (data.type === "font") {
             defaultFont = data.value;
             updateLayout = true;
+        } else if (data.type === "textFormatting") {
+            textFormatting = data.value;
         } else if (data.type === "superscriptedVerseNumbers") {
             superscriptedVerseNumbers = data.value;
         } else if (data.type === "nextSlide") {
@@ -185,7 +221,7 @@ window.OpenLP = {
             }
         }
     },
-    filterTags: function (string, tags) {
+    filterTags: function (string, allowedTags) {
         string = string
             // <br> comes through. Change to \n to preserve them and make line-counting accurate
             .replace(/<br>/gi, "\n")
@@ -194,8 +230,15 @@ window.OpenLP = {
             .replace(/\[/g, "&#91;")
             .replace(/\]/g, "&#93;");
 
-        $.each(tags, function(idx, tag) {
-            string = string.replace(new RegExp('<(\/?)'+tag+'([^>]*)>', 'gi'), '[$1'+tag+'$2]');
+        if (allowedTags[0] === 'all') {
+            return string;
+        }
+
+        $.each(allowedTags, function(idx, longTag) {
+            // the longTag may include attributes as well the tag name
+            onlyTag = longTag.replace(/^([^ ]+) .+$/,'$1');
+            string = string.replace(new RegExp('<'+longTag+'([^>]*)>', 'gi'), '['+longTag+'$1]');
+            string = string.replace(new RegExp('</'+onlyTag+'>','gi'), '[/'+onlyTag+']');
         });
 
         string = string
@@ -221,7 +264,16 @@ var lyricsContainerIndex = 0;
 var fadeDuration = 900;
 
 var autoResize = false;
-var superscriptedVerseNumbers = true;
+var textFormatting = {
+    "all": false,
+    "bold": true,
+    "italics": true,
+    "underline": true,
+    "colors": false,
+    "superscript": true,
+    "subscript": false,
+    "paragraph": false
+};
 var defaultFont = 36;
 
 obsChannel.onmessage = OpenLP.channelReceive;

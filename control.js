@@ -17,6 +17,17 @@ var autoSplitLongLines = true;
 var maxCharacters = 60;
 var minWords = 3;
 
+var textFormatting = {
+    "all": false,
+    "bold": true,
+    "italics": true,
+    "underline": true,
+    "colors": false,
+    "superscript": true,
+    "subscript": false,
+    "paragraph": false
+};
+
 openlpChannel.onmessage = function (ev) {
     var data = JSON.parse(ev.data);
     var type = data.type;
@@ -27,7 +38,7 @@ openlpChannel.onmessage = function (ev) {
         openlpChannel.postMessage(JSON.stringify({type: "hide", value: hiding}));
         openlpChannel.postMessage(JSON.stringify({type: "resize", value: autoResize}));
         openlpChannel.postMessage(JSON.stringify({type: "font", value: $("#lyrics-font-size-spinner").val()}));
-        openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: $("#superscripted-verse-numbers-checkbox").prop("checked")}));
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
     } else if (type === "lyrics") {
 
         lastDisplayedIndex = -1;
@@ -136,7 +147,6 @@ function splitLines(text) {
 
     return linesOfWords.join("\n");
 }
-
 function displayNext(amount) {
     if (amount <= 0) {
         return;
@@ -263,6 +273,50 @@ function loadSettings() {
     if (loadedSuperscriptedVerseNumbers !== null) {
         $("#superscripted-verse-numbers-checkbox").prop("checked", loadedSuperscriptedVerseNumbers === "true");
     }
+    var loadedTextFormattingAll = window.localStorage.getItem("textFormattingAll");
+    if (loadedTextFormattingAll !== null) {
+        textFormatting['all'] = loadedTextFormattingAll === "true";
+    }
+    $("#text-formatting-all-checkbox").prop("checked", textFormatting['all']);
+    if (textFormatting['all']) {
+        $(".text-formatting-checkbox").attr("disabled", true);
+        $(".text-formatting-checkbox ~ label").addClass('disabled');
+    }
+    var loadedTextFormattingBold = window.localStorage.getItem("textFormattingBold");
+    if (loadedTextFormattingBold !== null) {
+        textFormatting['bold'] = loadedTextFormattingBold === "true";
+    }
+    $("#text-formatting-bold-checkbox").prop("checked", textFormatting['bold']);
+    var loadedTextFormattingItalics = window.localStorage.getItem("textFormattingItalics");
+    if (loadedTextFormattingItalics !== null) {
+        textFormatting['italics'] = loadedTextFormattingItalics === "true";
+    }
+    $("#text-formatting-italics-checkbox").prop("checked", textFormatting['italics']);
+    var loadedTextFormattingUnderline = window.localStorage.getItem("textFormattingUnderline");
+    if (loadedTextFormattingUnderline !== null) {
+        textFormatting['underline'] = loadedTextFormattingUnderline === "true";
+    }
+    $("#text-formatting-underline-checkbox").prop("checked", textFormatting['underline']);
+    var loadedTextFormattingColors = window.localStorage.getItem("textFormattingColors");
+    if (loadedTextFormattingColors !== null) {
+        textFormatting['colors'] = loadedTextFormattingColors === "true";
+    }
+    $("#text-formatting-colors-checkbox").prop("checked", textFormatting['colors']);
+    var loadedTextFormattingSuperscript = window.localStorage.getItem("textFormattingSuperscript");
+    if (loadedTextFormattingSuperscript !== null) {
+        textFormatting['superscript'] = loadedTextFormattingSuperscript === "true";
+    }
+    $("#text-formatting-superscript-checkbox").prop("checked", textFormatting['superscript']);
+    var loadedTextFormattingSubscript = window.localStorage.getItem("textFormattingSubscript");
+    if (loadedTextFormattingSubscript !== null) {
+        textFormatting['subscript'] = loadedTextFormattingSubscript === "true";
+    }
+    $("#text-formatting-subscript-checkbox").prop("checked", textFormatting['subscript']);
+    var loadedTextFormattingParagraph = window.localStorage.getItem("textFormattingParagraph");
+    if (loadedTextFormattingParagraph !== null) {
+        textFormatting['paragraph'] = loadedTextFormattingParagraph === "true";
+    }
+    $("#text-formatting-paragraph-checkbox").prop("checked", textFormatting['paragraph']);
     var loadedFadeDuration = window.localStorage.getItem("fadeDuration");
     if (loadedFadeDuration !== null) {
         fadeDuration = loadedFadeDuration;
@@ -325,10 +379,65 @@ $(function () {
         minWords = $(this).val();
         window.localStorage.setItem("minWords", minWords);
     });
-    $("#superscripted-verse-numbers-checkbox").change(function () {
+    // $("#superscripted-verse-numbers-checkbox").change(function () {
+    //     var checked = $(this).prop("checked");
+    //     window.localStorage.setItem("superscriptedVerseNumbers", checked);
+    //     openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: checked}));
+    // });
+    $("#text-formatting-all-checkbox").change(function () {
         var checked = $(this).prop("checked");
-        window.localStorage.setItem("superscriptedVerseNumbers", checked);
-        openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: checked}));
+        textFormatting['all'] = checked;
+        window.localStorage.setItem("textFormattingAll", textFormatting['all']);
+        if (checked) {
+            $(".text-formatting-checkbox").attr("disabled", true);
+            $(".text-formatting-checkbox ~ label").addClass('disabled');
+        } else {
+            $(".text-formatting-checkbox").removeAttr("disabled");
+            $(".text-formatting-checkbox ~ label").removeClass('disabled');
+        }
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-bold-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['bold'] = checked;
+        window.localStorage.setItem("textFormattingBold", textFormatting['bold']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-italics-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['italics'] = checked;
+        window.localStorage.setItem("textFormattingItalics", textFormatting['italics']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-underline-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['underline'] = checked;
+        window.localStorage.setItem("textFormattingUnderline", textFormatting['underline']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-colors-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['colors'] = checked;
+        window.localStorage.setItem("textFormattingColors", textFormatting['colors']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-superscript-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['superscript'] = checked;
+        window.localStorage.setItem("textFormattingSuperscript", textFormatting['superscript']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-subscript-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['subscript'] = checked;
+        window.localStorage.setItem("textFormattingSubscript", textFormatting['subscript']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#text-formatting-paragraph-checkbox").change(function () {
+        var checked = $(this).prop("checked");
+        textFormatting['paragraph'] = checked;
+        window.localStorage.setItem("textFormattingParagraph", textFormatting['paragraph']);
+        openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
     });
     $("#lyrics-font-size-spinner").change(function () {
         var font = $(this).val();
