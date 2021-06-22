@@ -73,12 +73,7 @@ window.OpenLP = {
             text = slide["title"];
         } else {
             if (superscriptedVerseNumbers) {
-                text = slide["html"]
-                        //.replace("[","&#91;")
-                        //.replace("]","&#92;")
-                        .replace(RegExp('/<(\/?)sup>/[\1sup]/gi'))
-                        .replace(RegExp('/<\/?[^>]+>//gi'))
-                        .replace(RegExp('/\[(\/?)sup\]/<\1sup>/gi'));
+                text = OpenLP.filterTags(slide["html"], new Array('sup'));
             } else {
                 text = slide["text"];
             }
@@ -189,6 +184,27 @@ window.OpenLP = {
                 }
             }
         }
+    },
+    filterTags: function (string, tags) {
+        string = string
+            // <br> comes through. Change to \n to preserve them and make line-counting accurate
+            .replace(/<br>/gi, "\n")
+            // If we find square brackets in the text, assume the user intends them to be
+            // those literal characters and replace with their respective HTML entities
+            .replace(/\[/g, "&#91;")
+            .replace(/\]/g, "&#93;");
+
+        $.each(tags, function(idx, tag) {
+            string = string.replace(new RegExp('<(\/?)'+tag+'([^>]*)>', 'gi'), '[$1'+tag+'$2]');
+        });
+
+        string = string
+            // remove remaining HTML tags
+            .replace(/<[^>]+>/g, '')
+            // restore the tags we preserved
+            .replace(/\[(\/?)([^\]]+)\]/gi, '<$1$2>');
+
+        return string;
     }
 }
 $.ajaxSetup({cache: false});
