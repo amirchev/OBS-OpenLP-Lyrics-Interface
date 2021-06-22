@@ -23,6 +23,8 @@ You're all done.
 To view the comprehensive guide with screenshots, go [here](https://obsproject.com/forum/resources/using-openlp-interface-for-lyrics.1009/).
 
 ## Features
+- Can keep original slide formatting from OpenLP
+- Supports English, Spanish language
 - Control slides from OBS with next/previous slide buttons.
 - Auto-resize feature for text larger than viewing window.
 - Auto-line break feature for long text.
@@ -35,4 +37,4 @@ To view the comprehensive guide with screenshots, go [here](https://obsproject.c
 
 Please offer suggestions and feature requests here or the OBS forum. May God bless you through this tool.
 
-amirchev
+amirchev, with significant contributions from marcosrogers
