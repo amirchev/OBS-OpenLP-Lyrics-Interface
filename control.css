@@ -97,3 +97,7 @@ h6 {
     font-size: 9pt;
     margin: 0 0 4px 0;
 }
+
+label.disabled {
+    color: #7a797a;
+}

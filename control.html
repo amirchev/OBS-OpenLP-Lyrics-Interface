@@ -20,9 +20,9 @@
         <div class="controls-container">
             <div class="floating">
                 <div class="control-group custom-width">
-                <button id="increment-button-1" type="button" data-i18n="display-next">Display next</button>
+                    <button id="increment-button-1" type="button" data-i18n="display-next">Display next</button>
                     <input id="increment-spinner-1" type="number" min="1" step="1" value="1" size="2">
-                <button id="increment-button-2" data-i18n="display-next">Display next</button>
+                    <button id="increment-button-2" data-i18n="display-next">Display next</button>
                     <input id="increment-spinner-2" type="number" min="1" step="1" value="1" size="2">
                 </div>
             </div>
@@ -31,33 +31,33 @@
             </div>
             <div class="floating">
                 <div class="control-group">
-                <button id="undo-button" type="button" data-i18n="undo-display">Undo display</button>
-                <button id="redo-button" type="button" data-i18n="redo-display">Redo display</button>
+                    <button id="undo-button" type="button" data-i18n="undo-display">Undo display</button>
+                    <button id="redo-button" type="button" data-i18n="redo-display">Redo display</button>
                 </div>
             </div>
             <div class="floating">
                 <div class="control-group">
-                <button id="hide-button" type="button" data-i18n="hide-display">Hide display</button>
+                    <button id="hide-button" type="button" data-i18n="hide-display">Hide display</button>
                 </div>
             </div>
             <div class="floating">
                 <div class="control-group">
-                <button id="previous-button" type="button" data-i18n="previous-slide">Previous slide</button>
-                <button id="next-button" type="button" data-i18n="next-slide">Next slide</button>
+                    <button id="previous-button" type="button" data-i18n="previous-slide">Previous slide</button>
+                    <button id="next-button" type="button" data-i18n="next-slide">Next slide</button>
                 </div>
             </div>
             <div class="floating">
                 <div class="control-group">
                     <input id="auto-update-checkbox" type="checkbox">
-                <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
+                    <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
                 </div>
                 <div class="control-group">
                     <input id="display-all-checkbox" type="checkbox">
-                <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
+                    <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
                 </div>
                 <div class="control-group">
                     <input id="auto-hide-checkbox" type="checkbox">
-                <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
+                    <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
                 </div>
                 <div class="control-group">
                     <input id="resize-checkbox" type="checkbox">
@@ -67,21 +67,52 @@
                 <div class="control-group">
                     <div class="control-group">
                         <input id="auto-split-long-lines-checkbox" type="checkbox" checked="true">
-                    <label for="auto-split-long-lines-checkbox" data-i18n="auto-split-long-lines">Automatically split long lines</label>
+                        <label for="auto-split-long-lines-checkbox" data-i18n="auto-split-long-lines">Automatically split long lines</label>
                     </div>
                     <div class="control-group" id="split-max-characters">
-                    <label for="split-max-characters-spinner" data-i18n="max-characters-per-line">Maximum characters per line</label><br>
+                        <label for="split-max-characters-spinner" data-i18n="max-characters-per-line">Maximum characters per line</label><br>
                         <input id="split-max-characters-spinner" type="number" min="10" max="200" step="5" value="60" size="3">
                     </div>
                     <div class="control-group" id="split-min-words">
-                    <label for="split-min-words-spinner" data-i18n="min-words-per-line">Minimum words per line</label><br>
+                        <label for="split-min-words-spinner" data-i18n="min-words-per-line">Minimum words per line</label><br>
                         <input id="split-min-words-spinner" type="number" min="1" max="20" step="1" value="3" size="2">
                     </div>
                 </div>
-                <div class="control-group">
-                    <input id="superscripted-verse-numbers-checkbox" type="checkbox" checked="true">
-                <label for="superscripted-verse-numbers-checkbox" data-i18n="small-verse-numbers">Small verse numbers</label>
-                </div>
+                <fieldset class="control-group">
+                    <legend data-i18n="text-formatting">Allowed text formatting</legend>
+                    <div class="control-group">
+                        <input id="text-formatting-all-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-all-checkbox" data-i18n="text-formatting-all">All</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-bold-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-bold-checkbox" data-i18n="text-formatting-bold">Bold</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-italics-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-italics-checkbox" data-i18n="text-formatting-italics">Italics</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-underline-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-underline-checkbox" data-i18n="text-formatting-underline">Underline</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-colors-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-colors-checkbox" data-i18n="text-formatting-colors">Colors</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-superscript-checkbox" class="text-formatting-checkbox" type="checkbox" checked="true">
+                        <label for="text-formatting-superscript-checkbox" data-i18n="text-formatting-superscript">Superscript (small verse numbers)</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-subscript-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-subscript-checkbox" data-i18n="text-formatting-subscript">Subscript</label>
+                    </div>
+                    <div class="control-group">
+                        <input id="text-formatting-paragraph-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                        <label for="text-formatting-paragraph-checkbox" data-i18n="text-formatting-paragraph">Paragraph</label>
+                    </div>
+                </fieldset>
             </div>
             <div class="floating">
             <h6 data-i18n="current-slide">Current slide:</h6>
@@ -91,7 +122,7 @@
             <div class="floating">
                 <h6 data-i18n="settings">Settings</h6>
                 <div class="control-group">
-                <label for="button-height-select" data-i18n="button-size">Button size</label><br>
+                    <label for="button-height-select" data-i18n="button-size">Button size</label><br>
                     <select id="button-height-select">
                         <option value="Normal" data-i18n="normal">Normal</option>
                         <option value="Large" data-i18n="large">Large</option>
