@@ -269,10 +269,6 @@ function loadSettings() {
         minWords = loadedMinWords;
         $("#split-min-words-spinner").val(Number(loadedMinWords));
     }
-    var loadedSuperscriptedVerseNumbers = window.localStorage.getItem("superscriptedVerseNumbers");
-    if (loadedSuperscriptedVerseNumbers !== null) {
-        $("#superscripted-verse-numbers-checkbox").prop("checked", loadedSuperscriptedVerseNumbers === "true");
-    }
     var loadedTextFormattingAll = window.localStorage.getItem("textFormattingAll");
     if (loadedTextFormattingAll !== null) {
         textFormatting['all'] = loadedTextFormattingAll === "true";
@@ -379,11 +375,6 @@ $(function () {
         minWords = $(this).val();
         window.localStorage.setItem("minWords", minWords);
     });
-    // $("#superscripted-verse-numbers-checkbox").change(function () {
-    //     var checked = $(this).prop("checked");
-    //     window.localStorage.setItem("superscriptedVerseNumbers", checked);
-    //     openlpChannel.postMessage(JSON.stringify({type: "superscriptedVerseNumbers", value: checked}));
-    // });
     $("#text-formatting-all-checkbox").change(function () {
         var checked = $(this).prop("checked");
         textFormatting['all'] = checked;

@@ -91,7 +91,7 @@ window.OpenLP = {
                             case 'colors':
                                 tags.push('span style="-webkit-text-fill-color');
                                 break;
-                            case 'subscript':
+                            case 'superscript':
                                 tags.push('sup');
                                 break;
                             case 'subscript':
@@ -101,7 +101,6 @@ window.OpenLP = {
                                 tags.push('p');
                                 break;
                         }
-                        console.log(key+": "+val);
                     }
                 });
             }
@@ -172,8 +171,6 @@ window.OpenLP = {
             updateLayout = true;
         } else if (data.type === "textFormatting") {
             textFormatting = data.value;
-        } else if (data.type === "superscriptedVerseNumbers") {
-            superscriptedVerseNumbers = data.value;
         } else if (data.type === "nextSlide") {
             $.get("/api/controller/live/next");
         } else if (data.type === "previousSlide") {
