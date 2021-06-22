@@ -181,11 +181,11 @@ window.OpenLP = {
                 lyricsContainer.fadeOut(fadeDuration);
                 emptyString = true;
             } else {
-                if (crossfadeDuration == 0 || emptyString) {
+                if (crossfadeDuration == 0 || emptyString || alwaysHide) {
                     lyricsContainer.html(data.value);
                     if (emptyString) {
                         emptyString = false;
-                        if (!lyricsHidden) {
+                        if (!lyricsHidden && !alwaysHide) {
                             lyricsContainer.fadeIn(fadeDuration);
                         }
                     }
@@ -220,29 +220,29 @@ window.OpenLP = {
     },
     filterTags: function (string, allowedTags) {
         string = string
-            // <br> comes through. Change to \n to preserve them and make line-counting accurate
-            .replace(/<br>/gi, "\n")
-            // If we find square brackets in the text, assume the user intends them to be
-            // those literal characters and replace with their respective HTML entities
-            .replace(/\[/g, "&#91;")
-            .replace(/\]/g, "&#93;");
+                // <br> comes through. Change to \n to preserve them and make line-counting accurate
+                .replace(/<br>/gi, "\n")
+                // If we find square brackets in the text, assume the user intends them to be
+                // those literal characters and replace with their respective HTML entities
+                .replace(/\[/g, "&#91;")
+                .replace(/\]/g, "&#93;");
 
         if (allowedTags[0] === 'all') {
             return string;
         }
 
-        $.each(allowedTags, function(idx, longTag) {
+        $.each(allowedTags, function (idx, longTag) {
             // the longTag may include attributes as well the tag name
-            onlyTag = longTag.replace(/^([^ ]+) .+$/,'$1');
-            string = string.replace(new RegExp('<'+longTag+'([^>]*)>', 'gi'), '['+longTag+'$1]');
-            string = string.replace(new RegExp('</'+onlyTag+'>','gi'), '[/'+onlyTag+']');
+            onlyTag = longTag.replace(/^([^ ]+) .+$/, '$1');
+            string = string.replace(new RegExp('<' + longTag + '([^>]*)>', 'gi'), '[' + longTag + '$1]');
+            string = string.replace(new RegExp('</' + onlyTag + '>', 'gi'), '[/' + onlyTag + ']');
         });
 
         string = string
-            // remove remaining HTML tags
-            .replace(/<[^>]+>/g, '')
-            // restore the tags we preserved
-            .replace(/\[(\/?)([^\]]+)\]/gi, '<$1$2>');
+                // remove remaining HTML tags
+                .replace(/<[^>]+>/g, '')
+                // restore the tags we preserved
+                .replace(/\[(\/?)([^\]]+)\]/gi, '<$1$2>');
 
         return string;
     }
