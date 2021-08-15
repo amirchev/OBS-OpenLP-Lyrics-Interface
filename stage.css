@@ -16,20 +16,18 @@ body {
     display: flex;
     height: 500px;
     width: 100%;
-    -webkit-justify-content: center;
-    -webkit-align-items: center;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 
 .lyrics {
-    flex: 0;
     font-family: sans-serif;
     font-size: 36pt;
     color: white;
     background: rgba(0, 0, 0, 0.5);
     
     padding: 16px;
-    margin-right: 100px;
 
     position: absolute;
 }
@@ -41,7 +39,7 @@ body {
 
 .title-container {
     display: flex;
-    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
     position: relative;
     width: 100%;
     height: auto;
@@ -53,11 +51,4 @@ body {
     color: white;
     padding: 8px;  
     background: rgba(0, 0, 0, 0.5);
-}
-
-.top {
-}
-
-.bottom {
-
 }

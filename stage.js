@@ -213,34 +213,27 @@ window.OpenLP = {
                 break;
             case "lyricsLayout":
                 console.log(data);
-                let mLyricsContainer = $("#lyrics-container");
                 let mLyricsDiv = $(".lyrics");
                 switch (data.hAnchor) {
                     case LEFT:
-                        mLyricsContainer.css("justify-content", "flex-start");
-                        mLyricsDiv.css({"margin-left": data.hOffset + "px", "margin-right": "0"});
+                        mLyricsDiv.css({left: data.hOffset + "px", right: ""});
                         break;
                     case RIGHT:
-                        mLyricsContainer.css("justify-content", "flex-end");
-                        mLyricsDiv.css({"margin-right": data.hOffset + "px", "margin-left": "0"});
+                        mLyricsDiv.css({left: "", right: data.hOffset + "px"});
                         break;
                     case CENTER:
-                        mLyricsContainer.css("justify-content", "center");
-                        mLyricsDiv.css({"margin-left": data.hOffset + "px", "margin-right": "0"});
+                        mLyricsDiv.css({left: "", right: "", "margin-left": data.hOffset + "px" });
                         break;
                 }
                 switch (data.vAnchor) {
                     case TOP:
-                        mLyricsContainer.css("align-items", "flex-start");
-                        mLyricsDiv.css({"margin-top": data.vOffset + "px", "margin-bottom": "0"});
+                        mLyricsDiv.css({top: data.vOffset + "px", bottom: ""});
                         break;
                     case BOTTOM:
-                        mLyricsContainer.css("align-items", "flex-end");
-                        mLyricsDiv.css({"margin-bottom": data.vOffset + "px", "margin-top": "0"});
+                        mLyricsDiv.css({top: "", bottom: data.vOffset + "px"});
                         break;
                     case CENTER:
-                        mLyricsContainer.css("align-items", "center");
-                        mLyricsDiv.css({"margin-top": data.vOffset + "px", "margin-bottom": "0"});
+                        mLyricsDiv.css({top: "", bottom: "", "margin-top": data.vOffset + "px"});
                         break;
                 }
                 break;
