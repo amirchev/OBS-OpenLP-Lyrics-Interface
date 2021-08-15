@@ -73,7 +73,7 @@ select {
     width: 28%;
 }
 
-button:hover:not(.activeButton) {
+button:hover:not(.active-button) {
     background-color: #7a797a;
 }
 
@@ -81,7 +81,7 @@ select:hover {
     background-color: #585758;
 }
 
-button:active, select:indeterminate, .activeButton {
+button:active, select:indeterminate, .active-button {
     background-color: #1f1e1f;
 }
 
@@ -93,9 +93,26 @@ button:active, select:indeterminate, .activeButton {
     color: #DCEDC8;
 }
 
-h6 {
-    font-size: 9pt;
+h1 {
+    font-size: 14pt;
     margin: 0 0 4px 0;
+}
+
+legend {
+    cursor: pointer;
+}
+
+legend:before {
+    content: '\2796'; /* minus sign */
+}
+
+.active-collapsible:before {
+    content: '\2795'; /* plus sign */
+}
+
+hr {
+    width: 100%;
+    display: block;
 }
 
 label.disabled {

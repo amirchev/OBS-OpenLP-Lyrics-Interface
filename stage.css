@@ -3,27 +3,61 @@ body {
     overflow: hidden;
 }
 
-#lyrics-container {
-    height: 100%;
+#content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    flex-flow: column nowrap;
+}
+
+#lyrics-container {
+    display: flex;
+    height: 500px;
+    width: 100%;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+    position: relative;
 }
 
 .lyrics {
-    width: fit-content;
+    flex: 0;
     font-family: sans-serif;
     font-size: 36pt;
     color: white;
     background: rgba(0, 0, 0, 0.5);
+    
     padding: 16px;
-    text-align: center;
-    vertical-align: middle;
-    position: fixed;
-    bottom: 0;
+    margin-right: 100px;
+
+    position: absolute;
 }
 
 .lyrics:nth-child(2) {
     opacity: 0;
     z-index: -1;
+}
+
+.title-container {
+    display: flex;
+    -webkit-justify-content: flex-start;
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.title {
+    width: fit-content;
+    font-size: 36pt;
+    color: white;
+    padding: 8px;  
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.top {
+}
+
+.bottom {
+
 }

@@ -1,21 +1,51 @@
+const LEFT = 0, RIGHT = 1, CENTER = 2, TOP = 0, BOTTOM = 1;
+
+$.ajaxSetup({cache: false});
+var obsChannel = new BroadcastChannel("obs_openlp_channel");
+
+var hideOnBlankScreen = false;
+var lyricsHidden = false;
+var emptyString = false;
+var alwaysHide = false;
+var crossfadeDuration = 500;
+var lyricsContainerIndex = 0;
+var fadeDuration = 900;
+
+var autoResize = false;
+var maxWidth = 600;
+var textFormatting = {
+    "all": false,
+    "bold": true,
+    "italics": true,
+    "underline": true,
+    "colors": false,
+    "superscript": true,
+    "subscript": false,
+    "paragraph": false
+};
+var startingFont = 36;
+
+obsChannel.postMessage(JSON.stringify({type: "init"}));
+
 window.OpenLP = {
-    loadService: function (event) {
-        $.getJSON(
-                "/api/service/list",
+    updateTitle: function (event) {
+        $.getJSON("/api/service/list",
                 function (data, status) {
-                    OpenLP.nextSong = "";
-                    //$("#notes").html("");
+                    let found = false;
+                    let titleDiv = $(".title");
                     for (idx in data.results.items) {
                         idx = parseInt(idx, 10);
                         if (data.results.items[idx]["selected"]) {
-                            //$("#notes").html(data.results.items[idx]["notes"].replace(/\n/g, "<br />"));
-                            if (data.results.items.length > idx + 1) {
-                                OpenLP.nextSong = data.results.items[idx + 1]["title"];
-                            }
+                            titleDiv.html(data.results.items[idx]["title"]);
+                            found = true;
                             break;
                         }
                     }
-                    OpenLP.updateSlide();
+                    if (!found) {
+                        titleDiv.fadeOut(fadeDuration);
+                    } else {
+                        titleDiv.fadeIn(fadeDuration);
+                    }
                 }
         );
     },
@@ -25,10 +55,10 @@ window.OpenLP = {
                 function (data, status) {
                     OpenLP.currentSlides = data.results.slides;
                     OpenLP.currentSlide = 0;
-                    var tag = "";
-                    var lastChange = 0;
+                    let tag = "";
+                    let lastChange = 0;
                     $.each(data.results.slides, function (idx, slide) {
-                        var prevtag = tag;
+                        let prevtag = tag;
                         tag = slide["tag"];
                         if (tag != prevtag) {
                             // If the tag has changed, add new one to the list
@@ -39,8 +69,8 @@ window.OpenLP = {
                                 // If the tag hasn't changed, check to see if the same verse
                                 // has been repeated consecutively. Note the verse may have been
                                 // split over several slides, so search through. If so, repeat the tag.
-                                var match = true;
-                                for (var idx2 = 0; idx2 < idx - lastChange; idx2++) {
+                                let match = true;
+                                for (let idx2 = 0; idx2 < idx - lastChange; idx2++) {
                                     if (data.results.slides[lastChange + idx2]["text"] != data.results.slides[idx + idx2]["text"]) {
                                         match = false;
                                         break;
@@ -54,7 +84,8 @@ window.OpenLP = {
                         if (slide["selected"])
                             OpenLP.currentSlide = idx;
                     })
-                    OpenLP.loadService();
+                    OpenLP.updateTitle();
+                    OpenLP.updateSlide();
                 }
         );
     },
@@ -66,9 +97,9 @@ window.OpenLP = {
             // Bail if we're not fully initialized yet
             return;
         }
-        var slide = OpenLP.currentSlides[OpenLP.currentSlide];
-        var text = "";
-        var tags = new Array();
+        let slide = OpenLP.currentSlides[OpenLP.currentSlide];
+        let text = "";
+        let tags = new Array();
         // use title if available
         if (slide["title"]) {
             text = slide["title"];
@@ -115,7 +146,8 @@ window.OpenLP = {
         obsChannel.postMessage(JSON.stringify({type: "lyrics", lines: text.split(/\n/g)}));
     },
     pollServer: function () {
-        var lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
+        let lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
+        let titleDiv = $(".title");
         $.getJSON(
                 "/api/poll",
                 function (data, status) {
@@ -129,18 +161,20 @@ window.OpenLP = {
                         OpenLP.updateSlide();
                     }
                     //if screen is blanked, hide on stream as well
-                    var blankScreen = data.results.display === true
+                    let blankScreen = data.results.display === true
                             || data.results.theme === true
                             || data.results.blank === true;
                     if (blankScreen && hideOnBlankScreen || alwaysHide) {
                         if (!lyricsHidden) {
                             lyricsContainer.fadeOut(fadeDuration);
+                            titleDiv.fadeOut(fadeDuration);
                             lyricsHidden = true;
                         }
                     } else {
                         if (lyricsHidden) {
                             if (!emptyString) {
                                 lyricsContainer.fadeIn(fadeDuration);
+                                titleDiv.fadeIn(fadeDuration);
                             }
                             lyricsHidden = false;
                         }
@@ -152,68 +186,150 @@ window.OpenLP = {
         if (ev.data === null) {
             return;
         }
-        var updateLayout = false;
-        var lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
-        var data = JSON.parse(ev.data);
-        if (data.type === "hide") {
-            alwaysHide = data.value;
-        } else if (data.type === "hideOnBlank") {
-            hideOnBlankScreen = data.value;
-        } else if (data.type === "fadeDuration") {
-            fadeDuration = Number(data.value);
-        } else if (data.type === "crossfadeDuration") {
-            crossfadeDuration = Number(data.value);
-        } else if (data.type === "resize") {
-            autoResize = data.value;
-            updateLayout = true;
-        } else if (data.type === "font") {
-            defaultFont = data.value;
-            updateLayout = true;
-        } else if (data.type === "textFormatting") {
-            textFormatting = data.value;
-        } else if (data.type === "nextSlide") {
-            $.get("/api/controller/live/next");
-        } else if (data.type === "previousSlide") {
-            $.get("/api/controller/live/previous");
-        } else if (data.type === "lyrics") {
-
-            if (data.value.length <= 4) { //empty str
-                lyricsContainer.fadeOut(fadeDuration);
-                emptyString = true;
-            } else {
-                if (crossfadeDuration == 0 || emptyString || alwaysHide) {
-                    lyricsContainer.html(data.value);
-                    if (emptyString) {
-                        emptyString = false;
-                        if (!lyricsHidden && !alwaysHide) {
-                            lyricsContainer.fadeIn(fadeDuration);
-                        }
-                    }
-                } else {
-                    var nextLyricsContainer = $(".lyrics").eq((lyricsContainerIndex + 1) % 2);
-                    nextLyricsContainer.html(data.value);
-                    lyricsContainer.fadeTo(Number(crossfadeDuration), 0);
-                    nextLyricsContainer.fadeTo(Number(crossfadeDuration), 1);
-
-                    lyricsContainerIndex = (lyricsContainerIndex + 1) % 2;
-                    lyricsContainer = nextLyricsContainer;
+        let updateLayout = false;
+        let lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
+        let data = JSON.parse(ev.data);
+        console.log(data.type);
+        switch (data.type) {
+            case "titleLayout":
+                let mTitleContainer = $(".title-container");
+                let mTitleDiv = $(".title");
+                switch (data.hAnchor) {
+                    case LEFT:
+                        mTitleContainer.css("justify-content", "flex-start");
+                        mTitleDiv.css({"margin-left": data.hOffset + "px", "margin-right": "0"});
+                        break;
+                    case RIGHT:
+                        mTitleContainer.css("justify-content", "flex-end");
+                        mTitleDiv.css({"margin-right": data.hOffset + "px", "margin-left": "0"});
+                        break;
+                    case CENTER:
+                        mTitleContainer.css("justify-content", "center");
+                        mTitleDiv.css({"margin-left": data.hOffset + "px", "margin-right": "0"});
+                        break;
                 }
-            }
-            updateLayout = true;
+                $(".title-container").eq(data.vAnchor).show();
+                $(".title-container").eq(1 - data.vAnchor).hide();
+                break;
+            case "lyricsLayout":
+                console.log(data);
+                let mLyricsContainer = $("#lyrics-container");
+                let mLyricsDiv = $(".lyrics");
+                switch (data.hAnchor) {
+                    case LEFT:
+                        mLyricsContainer.css("justify-content", "flex-start");
+                        mLyricsDiv.css({"margin-left": data.hOffset + "px", "margin-right": "0"});
+                        break;
+                    case RIGHT:
+                        mLyricsContainer.css("justify-content", "flex-end");
+                        mLyricsDiv.css({"margin-right": data.hOffset + "px", "margin-left": "0"});
+                        break;
+                    case CENTER:
+                        mLyricsContainer.css("justify-content", "center");
+                        mLyricsDiv.css({"margin-left": data.hOffset + "px", "margin-right": "0"});
+                        break;
+                }
+                switch (data.vAnchor) {
+                    case TOP:
+                        mLyricsContainer.css("align-items", "flex-start");
+                        mLyricsDiv.css({"margin-top": data.vOffset + "px", "margin-bottom": "0"});
+                        break;
+                    case BOTTOM:
+                        mLyricsContainer.css("align-items", "flex-end");
+                        mLyricsDiv.css({"margin-bottom": data.vOffset + "px", "margin-top": "0"});
+                        break;
+                    case CENTER:
+                        mLyricsContainer.css("align-items", "center");
+                        mLyricsDiv.css({"margin-top": data.vOffset + "px", "margin-bottom": "0"});
+                        break;
+                }
+                break;
+            case "maxWidth":
+                maxWidth = data.value;
+                $(".lyrics").css("max-width", maxWidth + "px");
+                break;
+            case "lyricsHeight":
+                $("#lyrics-container").css("height", data.value + "px");
+                break;
+            case "hide":
+                alwaysHide = data.value;
+                break;
+            case "hideOnBlank":
+                hideOnBlankScreen = data.value;
+                break;
+            case "fadeDuration":
+                fadeDuration = Number(data.value);
+                break;
+            case "crossfadeDuration":
+                crossfadeDuration = Number(data.value);
+                break;
+            case "resize":
+                autoResize = data.value;
+                updateLayout = true;
+                break;
+            case "lyricsFont":
+                startingFont = data.value;
+                updateLayout = true;
+                break;
+            case "titleFont":
+                $(".title").css("font-size", data.value + "pt");
+                break;
+            case "textFormatting":
+                textFormatting = data.value;
+                break;
+            case "nextSlide":
+                $.get("/api/controller/live/next");
+                break;
+            case "previousSlide":
+                $.get("/api/controller/live/previous");
+                break;
+            case "lyrics":
+                if (data.value.length <= 4) { //empty str
+                    lyricsContainer.fadeOut(fadeDuration);
+                    emptyString = true;
+                } else {
+                    if (crossfadeDuration == 0 || emptyString || alwaysHide) {
+                        lyricsContainer.html(data.value);
+                        if (emptyString) {
+                            emptyString = false;
+                            if (!lyricsHidden && !alwaysHide) {
+                                lyricsContainer.fadeIn(fadeDuration);
+                            }
+                        }
+                    } else {
+                        let nextLyricsContainer = $(".lyrics").eq((lyricsContainerIndex + 1) % 2);
+                        nextLyricsContainer.html(data.value);
+                        lyricsContainer.fadeTo(Number(crossfadeDuration), 0);
+                        nextLyricsContainer.fadeTo(Number(crossfadeDuration), 1);
+
+                        lyricsContainerIndex = (lyricsContainerIndex + 1) % 2;
+                        lyricsContainer = nextLyricsContainer;
+                    }
+                }
+                updateLayout = true;
+                break;
+            default:
+                console.log("Unsupported message: " + data.type + ":");
+                console.log(data);
+                break;
         }
 
         if (updateLayout) {
             // Reset font size back to our "baseline"
-            lyricsContainer.css('font-size', defaultFont + "pt");
+            lyricsContainer.css('font-size', startingFont + "pt");
 
             if (autoResize) {
                 // Loop while our lyrics box is taller than our window
-                while (lyricsContainer.outerHeight() > window.innerHeight) {
+                let lyricsParent = $("#lyrics-container");
+                console.log("parent height: " + lyricsParent.innerHeight() + "px");
+                console.log("lyrics height: " + lyricsContainer.outerHeight() + "px");
+                while (lyricsContainer.outerHeight() > lyricsParent.innerHeight() && lyricsParent.innerHeight() > 0) {
+                    console.log("lyrics height: " + lyricsContainer.outerHeight() + "px");
                     // Get the current font size (in px) and shrink it by 1 px
-                    var currentSize = lyricsContainer.css('font-size')
-                    var nextSize = (parseInt(currentSize) - 1) + 'px'
+                    let currentSize = lyricsContainer.css('font-size');
+                    let nextSize = (parseInt(currentSize) - 1) + 'px';
                     // Apply the new (smaller) font size
-                    lyricsContainer.css('font-size', nextSize)
+                    lyricsContainer.css('font-size', nextSize);
                 }
             }
         }
@@ -246,33 +362,8 @@ window.OpenLP = {
 
         return string;
     }
-}
-$.ajaxSetup({cache: false});
+};
+
 setInterval(OpenLP.pollServer, 250);
 OpenLP.pollServer();
-var obsChannel = new BroadcastChannel("obs_openlp_channel");
-
-var hideOnBlankScreen = false;
-var lyricsHidden = false;
-var emptyString = false;
-var alwaysHide = false;
-var crossfadeDuration = 500;
-var lyricsContainerIndex = 0;
-var fadeDuration = 900;
-
-var autoResize = false;
-var textFormatting = {
-    "all": false,
-    "bold": true,
-    "italics": true,
-    "underline": true,
-    "colors": false,
-    "superscript": true,
-    "subscript": false,
-    "paragraph": false
-};
-var defaultFont = 36;
-
 obsChannel.onmessage = OpenLP.channelReceive;
-
-obsChannel.postMessage(JSON.stringify({type: "init"}));
