@@ -56,5 +56,7 @@
     "control-settings": "Control",
     "max-width": "Max width",
     "height": "Height",
-    "lyrics-settings": "Lyrics settings"
+    "lyrics-settings": "Lyrics settings",
+    "display-control": "Display control:",
+    "slide-control": "Slide control:"
 }

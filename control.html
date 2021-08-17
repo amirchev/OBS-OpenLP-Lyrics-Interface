@@ -19,6 +19,7 @@
     </head>
     <body>
         <div class="controls-container">
+            <h1 data-i18n="display-control">Display control:</h1>
             <div class="floating">
                 <div class="control-group custom-width">
                     <button id="increment-button-1" type="button" data-i18n="display-next">Display next</button>
@@ -42,20 +43,7 @@
                 </div>
             </div>
             <hr>
-            <div class="floating">
-                <div class="control-group">
-                    <input id="auto-update-checkbox" type="checkbox">
-                    <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
-                </div>
-                <div class="control-group">
-                    <input id="display-all-checkbox" type="checkbox">
-                    <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
-                </div>
-                <div class="control-group">
-                    <input id="auto-hide-checkbox" type="checkbox">
-                    <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
-                </div>
-            </div>
+            <h1 data-i18n="slide-control">Slide control:</h1>
             <div class="floating">
                 <div class="control-group">
                     <button id="previous-button" type="button" data-i18n="previous-slide">Previous slide</button>
@@ -157,10 +145,24 @@
                             </div>
                         </div>
                     </fieldset>
-                    
+
                     <fieldset class="control-group">
                         <legend data-i18n="lyrics-settings" data-collapse="lyrics-settings">Lyrics settings</legend>
                         <div id="lyrics-settings">
+                            <div class="floating">
+                                <div class="control-group">
+                                    <input id="auto-update-checkbox" type="checkbox">
+                                    <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
+                                </div>
+                                <div class="control-group">
+                                    <input id="display-all-checkbox" type="checkbox">
+                                    <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
+                                </div>
+                                <div class="control-group">
+                                    <input id="auto-hide-checkbox" type="checkbox">
+                                    <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
+                                </div>
+                            </div>
                             <div class="control-group">
                                 <input id="resize-checkbox" type="checkbox">
                                 <label for="resize-checkbox" data-i18n="auto-resize-text">Resize text that doesn't fit in window</label>
