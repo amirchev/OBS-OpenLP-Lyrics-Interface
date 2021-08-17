@@ -216,10 +216,10 @@ window.OpenLP = {
                 let mLyricsDiv = $(".lyrics");
                 switch (data.hAnchor) {
                     case LEFT:
-                        mLyricsDiv.css({left: data.hOffset + "px", right: ""});
+                        mLyricsDiv.css({left: data.hOffset + "px", right: "", "margin-left": ""});
                         break;
                     case RIGHT:
-                        mLyricsDiv.css({left: "", right: data.hOffset + "px"});
+                        mLyricsDiv.css({left: "", right: data.hOffset + "px", "margin-left": ""});
                         break;
                     case CENTER:
                         mLyricsDiv.css({left: "", right: "", "margin-left": data.hOffset + "px" });
@@ -227,12 +227,12 @@ window.OpenLP = {
                 }
                 switch (data.vAnchor) {
                     case TOP:
-                        mLyricsDiv.css({top: data.vOffset + "px", bottom: ""});
+                        mLyricsDiv.css({top: data.vOffset + "px", bottom: "", "margin-top": ""});
                         break;
                     case BOTTOM:
-                        mLyricsDiv.css({top: "", bottom: data.vOffset + "px"});
+                        mLyricsDiv.css({top: "", bottom: data.vOffset + "px", "margin-top": ""});
                         break;
-                    case CENTER:
+                    case CENTER: 
                         mLyricsDiv.css({top: "", bottom: "", "margin-top": data.vOffset + "px"});
                         break;
                 }
