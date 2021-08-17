@@ -5,6 +5,7 @@ var obsChannel = new BroadcastChannel("obs_openlp_channel");
 
 var hideOnBlankScreen = false;
 var lyricsHidden = false;
+var titleHidden = false;
 var emptyString = false;
 var alwaysHide = false;
 var crossfadeDuration = 500;
@@ -59,8 +60,12 @@ window.OpenLP = {
                     }
                     if (!found) {
                         titleDiv.fadeOut(fadeDuration);
+                        titleHidden = true;
                     } else {
-                        titleDiv.fadeIn(fadeDuration);
+                        if (!lyricsHidden && !alwaysHide) {
+                            titleDiv.fadeIn(fadeDuration);
+                        }
+                        titleHidden = false;
                     }
                 }
         );
@@ -190,7 +195,9 @@ window.OpenLP = {
                         if (lyricsHidden) {
                             if (!emptyString) {
                                 lyricsContainer.fadeIn(fadeDuration);
-                                titleDiv.fadeIn(fadeDuration);
+                                if (!titleHidden) {
+                                    titleDiv.fadeIn(fadeDuration);
+                                }
                             }
                             lyricsHidden = false;
                         }
@@ -295,7 +302,7 @@ window.OpenLP = {
                     lyricsContainer.fadeOut(fadeDuration);
                     emptyString = true;
                 } else {
-                    if (crossfadeDuration == 0 || emptyString || alwaysHide) {
+                    if (crossfadeDuration === 0 || emptyString || alwaysHide || lyricsHidden) {
                         lyricsContainer.html(data.value);
                         if (emptyString) {
                             emptyString = false;
@@ -304,12 +311,12 @@ window.OpenLP = {
                             }
                         }
                     } else {
-                        let nextLyricsContainer = $(".lyrics").eq((lyricsContainerIndex + 1) % 2);
+                        let nextLyricsContainer = $(".lyrics").eq(1 - lyricsContainerIndex);
                         nextLyricsContainer.html(data.value);
-                        lyricsContainer.fadeTo(Number(crossfadeDuration), 0);
-                        nextLyricsContainer.fadeTo(Number(crossfadeDuration), 1);
+                        lyricsContainer.fadeTo(crossfadeDuration, 0);
+                        nextLyricsContainer.fadeTo(crossfadeDuration, 1);
 
-                        lyricsContainerIndex = (lyricsContainerIndex + 1) % 2;
+                        lyricsContainerIndex = 1 - lyricsContainerIndex;
                         lyricsContainer = nextLyricsContainer;
                     }
                 }
