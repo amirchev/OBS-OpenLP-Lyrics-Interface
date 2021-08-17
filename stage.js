@@ -26,8 +26,6 @@ var textFormatting = {
 };
 var startingFont = 36;
 
-obsChannel.postMessage(JSON.stringify({type: "init"}));
-
 window.OpenLP = {
     updateTitle: function (event) {
         $.getJSON("/api/service/list",
@@ -377,4 +375,6 @@ window.OpenLP = {
 
 setInterval(OpenLP.pollServer, 250);
 OpenLP.pollServer();
+
 obsChannel.onmessage = OpenLP.channelReceive;
+obsChannel.postMessage(JSON.stringify({type: "init"}));
