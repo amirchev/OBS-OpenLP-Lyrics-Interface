@@ -33,10 +33,26 @@ window.OpenLP = {
                 function (data, status) {
                     let found = false;
                     let titleDiv = $(".title");
+                    console.log(data);
                     for (idx in data.results.items) {
                         idx = parseInt(idx, 10);
                         if (data.results.items[idx]["selected"]) {
-                            titleDiv.html(data.results.items[idx]["title"]);
+                            let title = data.results.items[idx]["title"];
+                            if (data.results.items[idx]["plugin"] === "bibles") {
+                                let location = String(/\d? ?\w+ \d+:[0-9, -]+/.exec(title)).trim();
+                                let allVersions = title.match(/[A-Z]{3,}/g);
+                                let uniqueVersions = [];
+                                let versions = "";
+                                allVersions.forEach(function (version, index, array) {
+                                    if (!uniqueVersions.includes(version)) {
+                                        uniqueVersions.push(version);
+                                        versions += version + ", ";
+                                    }
+                                });
+                                versions = versions.slice(0, -2);
+                                title = location + " " + versions;
+                            }
+                            titleDiv.html(title);
                             found = true;
                             break;
                         }
@@ -189,7 +205,6 @@ window.OpenLP = {
         let updateLayout = false;
         let lyricsContainer = $(".lyrics").eq(lyricsContainerIndex);
         let data = JSON.parse(ev.data);
-        console.log(data.type);
         switch (data.type) {
             case "titleLayout":
                 let mTitleContainer = $(".title-container");
@@ -212,7 +227,6 @@ window.OpenLP = {
                 $(".title-container").eq(1 - data.vAnchor).hide();
                 break;
             case "lyricsLayout":
-                console.log(data);
                 let mLyricsDiv = $(".lyrics");
                 switch (data.hAnchor) {
                     case LEFT:
@@ -222,7 +236,7 @@ window.OpenLP = {
                         mLyricsDiv.css({left: "", right: data.hOffset + "px", "margin-left": ""});
                         break;
                     case CENTER:
-                        mLyricsDiv.css({left: "", right: "", "margin-left": data.hOffset + "px" });
+                        mLyricsDiv.css({left: "", right: "", "margin-left": data.hOffset + "px"});
                         break;
                 }
                 switch (data.vAnchor) {
@@ -232,7 +246,7 @@ window.OpenLP = {
                     case BOTTOM:
                         mLyricsDiv.css({top: "", bottom: data.vOffset + "px", "margin-top": ""});
                         break;
-                    case CENTER: 
+                    case CENTER:
                         mLyricsDiv.css({top: "", bottom: "", "margin-top": data.vOffset + "px"});
                         break;
                 }
@@ -314,10 +328,7 @@ window.OpenLP = {
             if (autoResize) {
                 // Loop while our lyrics box is taller than our window
                 let lyricsParent = $("#lyrics-container");
-                console.log("parent height: " + lyricsParent.innerHeight() + "px");
-                console.log("lyrics height: " + lyricsContainer.outerHeight() + "px");
                 while (lyricsContainer.outerHeight() > lyricsParent.innerHeight() && lyricsParent.innerHeight() > 0) {
-                    console.log("lyrics height: " + lyricsContainer.outerHeight() + "px");
                     // Get the current font size (in px) and shrink it by 1 px
                     let currentSize = lyricsContainer.css('font-size');
                     let nextSize = (parseInt(currentSize) - 1) + 'px';
