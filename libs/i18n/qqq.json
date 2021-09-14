@@ -3,8 +3,8 @@
 		"authors": [
 			"Mark Rogers"
 		],
-		"last-updated": "2021-06-12",
-		"locale": "en",
+		"last-updated": "2021-09-14",
+		"locale": "qqq",
 		"other-metadata": ""
 	},
 	"title": "The title that will be displayed in the header bar",
@@ -37,8 +37,24 @@
 	"normal": "Option to choose a normal button size",
 	"large": "Option to choose a larger-than-normal button size",
 	"larger": "Option to choose the largest available button size",
-	"font-size-control": "Option to change the font size of the control window",
-	"font-size-lyrics": "Option to change the font size of the stage",
+	"font-size": "Option to change the font size",
 	"crossfade-duration": "Option to change the length (in milliseconds) of crossfades",
-	"fade-duration": "Option to choose how long (in milliseconds) a fade-out or fade-in transition will take"
+	"fade-duration": "Option to choose how long (in milliseconds) a fade-out or fade-in transition will take",
+	"vertical-anchor": "Option to set the vertical anchor",
+	"top": "Option to choose a top vertical anchor",
+	"bottom": "Option to choose a bottom vertical anchor",
+	"center": "Option to choose a center vertical anchor",
+	"vertical-offset": "Option to choose the vertical offset",
+	"horizontal-anchor": "Option to choose the horizontal anchor",
+	"left": "Option to choose a left horizontal anchor",
+	"right": "Option to choose a right horizontal anchor",
+	"horizontal-offset": "Option to choose the horizontal offset",
+	"title-layout": "Label for the title layout options",
+	"lyrics-layout": "Label for the lyrics layout options",
+	"control-settings": "Label for the control settings",
+	"max-width": "Option to choose the maximum width",
+	"height": "Option to choose the height",
+	"lyrics-settings": "Label for the lyrics settings",
+	"display-control": "Label for the display control section",
+	"slide-control": "Label for the slide control section"
 }
