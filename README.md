@@ -37,4 +37,8 @@ To view the comprehensive guide with screenshots, go [here](https://obsproject.c
 
 Please offer suggestions and feature requests here or the OBS forum. May God bless you through this tool.
 
+Features in the works:
+- Align text (center, left, right, justify)
+- Option to show/hide with black screen, theme, desktop
+
 amirchev, with significant contributions from marcosrogers
