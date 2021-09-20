@@ -84,6 +84,15 @@
                                 <label for="title-font-size-spinner" data-i18n="font-size">Font size</label><br>
                                 <input id="title-font-size-spinner" type="number" min="0" max="128" step="1" value="36" size="4">
                             </div>
+                            <span data-i18n="title-visibility">Display title during:</span>
+                            <div class="control-group">
+                                <input id="title-visibility-song" type="checkbox">
+                                <label for="title-visibility-song" data-i18n="title-visibility-song">Song</label>
+                            </div>
+                            <div class="control-group">
+                                <input id="title-visibility-scripture" type="checkbox">
+                                <label for="title-visibility-scripture" data-i18n="title-visibility-scripture">Scripture</label>
+                            </div>
                         </div>
                     </fieldset>
                     <fieldset class="control-group">
@@ -131,37 +140,33 @@
                     <fieldset class="control-group">
                         <legend data-i18n="lyrics-settings" data-collapse="lyrics-settings">Lyrics settings</legend>
                         <div id="lyrics-settings">
-                            <div class="floating">
-                                <div class="control-group">
-                                    <input id="auto-update-checkbox" type="checkbox">
-                                    <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
-                                </div>
-                                <div class="control-group">
-                                    <input id="display-all-checkbox" type="checkbox">
-                                    <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
-                                </div>
-                                <div class="control-group">
-                                    <input id="auto-hide-checkbox" type="checkbox">
-                                    <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
-                                </div>
+                            <div class="control-group">
+                                <input id="auto-update-checkbox" type="checkbox">
+                                <label for="auto-update-checkbox" data-i18n="auto-update-text">Auto-update text on slide change</label>
+                            </div>
+                            <div class="control-group">
+                                <input id="display-all-checkbox" type="checkbox">
+                                <label for="display-all-checkbox" data-i18n="display-all-text">Display all text</label>
+                            </div>
+                            <div class="control-group">
+                                <input id="auto-hide-checkbox" type="checkbox">
+                                <label for="auto-hide-checkbox" data-i18n="auto-hide-on-blank">Auto-hide when blank screen displayed</label>
                             </div>
                             <div class="control-group">
                                 <input id="resize-checkbox" type="checkbox">
                                 <label for="resize-checkbox" data-i18n="auto-resize-text">Resize text that doesn't fit in window</label>
                             </div>
                             <div class="control-group">
-                                <div class="control-group">
-                                    <input id="auto-split-long-lines-checkbox" type="checkbox" checked>
-                                    <label for="auto-split-long-lines-checkbox" data-i18n="auto-split-long-lines">Automatically split long lines</label>
-                                </div>
-                                <div class="control-group" id="split-max-characters">
-                                    <label for="split-max-characters-spinner" data-i18n="max-characters-per-line">Maximum characters per line</label><br>
-                                    <input id="split-max-characters-spinner" type="number" min="10" max="200" step="5" value="60" size="3">
-                                </div>
-                                <div class="control-group" id="split-min-words">
-                                    <label for="split-min-words-spinner" data-i18n="min-words-per-line">Minimum words per line</label><br>
-                                    <input id="split-min-words-spinner" type="number" min="1" max="20" step="1" value="3" size="2">
-                                </div>
+                                <input id="auto-split-long-lines-checkbox" type="checkbox" checked>
+                                <label for="auto-split-long-lines-checkbox" data-i18n="auto-split-long-lines">Automatically split long lines</label>
+                            </div>
+                            <div class="control-group" id="split-max-characters">
+                                <label for="split-max-characters-spinner" data-i18n="max-characters-per-line">Maximum characters per line</label><br>
+                                <input id="split-max-characters-spinner" type="number" min="10" max="200" step="5" value="60" size="3">
+                            </div>
+                            <div class="control-group" id="split-min-words">
+                                <label for="split-min-words-spinner" data-i18n="min-words-per-line">Minimum words per line</label><br>
+                                <input id="split-min-words-spinner" type="number" min="1" max="20" step="1" value="3" size="2">
                             </div>
                             <div class="control-group">
                                 <label for="crossfade-duration-spinner" data-i18n="crossfade-duration">Crossfade duration</label><br>
@@ -194,35 +199,35 @@
                         <legend data-i18n="text-formatting" data-collapse="text-formatting-settings">Text formatting</legend>
                         <div id="text-formatting-settings">
                             <div class="control-group">
-                                <input id="text-formatting-all-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-all-checkbox" type="checkbox">
                                 <label for="text-formatting-all-checkbox" data-i18n="text-formatting-all">All</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-bold-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-bold-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-bold-checkbox" data-i18n="text-formatting-bold">Bold</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-italics-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-italics-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-italics-checkbox" data-i18n="text-formatting-italics">Italics</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-underline-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-underline-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-underline-checkbox" data-i18n="text-formatting-underline">Underline</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-colors-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-colors-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-colors-checkbox" data-i18n="text-formatting-colors">Colors</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-superscript-checkbox" class="text-formatting-checkbox" type="checkbox" checked="true">
+                                <input id="text-formatting-superscript-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-superscript-checkbox" data-i18n="text-formatting-superscript">Superscript (small verse numbers)</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-subscript-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-subscript-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-subscript-checkbox" data-i18n="text-formatting-subscript">Subscript</label>
                             </div>
                             <div class="control-group">
-                                <input id="text-formatting-paragraph-checkbox" class="text-formatting-checkbox" type="checkbox" checked="false">
+                                <input id="text-formatting-paragraph-checkbox" class="text-formatting-checkbox" type="checkbox">
                                 <label for="text-formatting-paragraph-checkbox" data-i18n="text-formatting-paragraph">Paragraphs</label>
                             </div>
                         </div>
