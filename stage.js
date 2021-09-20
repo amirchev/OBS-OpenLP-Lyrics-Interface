@@ -12,6 +12,11 @@ var crossfadeDuration = 500;
 var lyricsContainerIndex = 0;
 var fadeDuration = 900;
 
+var titleVisible = {
+    "songs": false,
+    "bibles": false
+};
+
 var autoResize = false;
 var maxWidth = 600;
 var textFormatting = {
@@ -30,33 +35,35 @@ window.OpenLP = {
     updateTitle: function (event) {
         $.getJSON("/api/service/list",
                 function (data, status) {
-                    let found = false;
+                    let validTitle = false;
                     let titleDiv = $(".title");
-                    console.log(data);
                     for (idx in data.results.items) {
                         idx = parseInt(idx, 10);
                         if (data.results.items[idx]["selected"]) {
                             let title = data.results.items[idx]["title"];
-                            if (data.results.items[idx]["plugin"] === "bibles") {
-                                let location = String(/\d? ?\w+ \d+:[0-9, -]+/.exec(title)).trim();
-                                let allVersions = title.match(/[A-Z]{3,}/g);
-                                let uniqueVersions = [];
-                                let versions = "";
-                                allVersions.forEach(function (version, index, array) {
-                                    if (!uniqueVersions.includes(version)) {
-                                        uniqueVersions.push(version);
-                                        versions += version + ", ";
-                                    }
-                                });
-                                versions = versions.slice(0, -2);
-                                title = location + " " + versions;
+                            let plugin = data.results.items[idx]["plugin"];
+                            if (titleVisible[plugin]) {
+                                if (plugin === "bibles") {
+                                    let location = String(/\d? ?\w+ \d+:[0-9, -]+/.exec(title)).trim();
+                                    let allVersions = title.match(/[A-Z]{3,}/g);
+                                    let uniqueVersions = [];
+                                    let versions = "";
+                                    allVersions.forEach(function (version, index, array) {
+                                        if (!uniqueVersions.includes(version)) {
+                                            uniqueVersions.push(version);
+                                            versions += version + ", ";
+                                        }
+                                    });
+                                    versions = versions.slice(0, -2);
+                                    title = location + " " + versions;
+                                }
+                                titleDiv.html(title);
+                                validTitle = true;
                             }
-                            titleDiv.html(title);
-                            found = true;
                             break;
                         }
                     }
-                    if (!found) {
+                    if (!validTitle) {
                         titleDiv.fadeOut(fadeDuration);
                         titleHidden = true;
                     } else {
@@ -285,6 +292,15 @@ window.OpenLP = {
                 break;
             case "titleFont":
                 $(".title").css("font-size", data.value + "pt");
+                break;
+            case "titleVisibility":
+                if (data.song !== undefined) {
+                    titleVisible["songs"] = data.song;
+                }
+                if (data.bible !== undefined) {
+                    titleVisible["bibles"] = data.bible;
+                }
+                OpenLP.updateTitle();
                 break;
             case "textFormatting":
                 textFormatting = data.value;

@@ -44,11 +44,14 @@ openlpChannel.onmessage = function (ev) {
         openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
         openlpChannel.postMessage(JSON.stringify({type: "maxWidth", value: $("#lyrics-max-width-spinner").val()}));
         openlpChannel.postMessage(JSON.stringify({type: "lyricsHeight", value: $("#lyrics-height-spinner").val()}));
+        openlpChannel.postMessage(JSON.stringify({
+            type: "titleVisibility",
+            song: $("#title-visibility-song").prop("checked"),
+            bible: $("#title-visibility-scripture").prop("checked")
+        }));
         transmitLyricsLayout();
         transmitTitleLayout();
-
     } else if (type === "lyrics") {
-
         lastDisplayedIndex = -1;
 
         if (autoSplitLongLines) {
@@ -218,6 +221,7 @@ function updateButtonSize(opt) {
     }
 }
 
+//called on start to load saved settings
 function loadSettings() {
     let loadedTitleHAnchor = window.localStorage.getItem("titleHAnchor");
     if (loadedTitleHAnchor !== null) {
@@ -369,6 +373,14 @@ function loadSettings() {
     if (loadedButtonSize !== null) {
         updateButtonSize(loadedButtonSize);
         $("#button-height-select").val(loadedButtonSize);
+    }
+    let titleVisibleSong = window.localStorage.getItem("titleVisibleSong");
+    if (titleVisibleSong !== null) {
+        $("#title-visibility-song").prop("checked", titleVisibleSong === "true");
+    }
+    let titleVisibleScripture = window.localStorage.getItem("titleVisibleScripture");
+    if (titleVisibleScripture !== null) {
+        $("#title-visibility-scripture").prop("checked", titleVisibleScripture === "true");
     }
     $("legend").each(function (i) {
         let id = $(this).attr("data-collapse");
@@ -606,6 +618,16 @@ $(function () {
         textFormatting['paragraph'] = checked;
         window.localStorage.setItem("textFormattingParagraph", textFormatting['paragraph']);
         openlpChannel.postMessage(JSON.stringify({type: "textFormatting", value: textFormatting}));
+    });
+    $("#title-visibility-song").change(function () {
+        let checked = $(this).prop("checked");
+        window.localStorage.setItem("titleVisibleSong", checked);
+        openlpChannel.postMessage(JSON.stringify({type: "titleVisibility", song: checked}));
+    });
+    $("#title-visibility-scripture").change(function () {
+        let checked = $(this).prop("checked");
+        window.localStorage.setItem("titleVisibleScripture", checked);
+        openlpChannel.postMessage(JSON.stringify({type: "titleVisibility", bible: checked}));
     });
     $("#lyrics-font-size-spinner").change(function () {
         let font = $(this).val();
