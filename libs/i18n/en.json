@@ -57,5 +57,8 @@
 	"height": "Height",
 	"lyrics-settings": "Lyrics settings",
 	"display-control": "Display control:",
-	"slide-control": "Slide control:"
+	"slide-control": "Slide control:",
+        "title-visibility": "Display title during:",
+        "title-visibility-song": "Song",
+        "title-visibility-scripture": "Scripture"
 }

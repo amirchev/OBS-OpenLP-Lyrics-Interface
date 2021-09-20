@@ -56,5 +56,8 @@
 	"height": "Option to choose the height",
 	"lyrics-settings": "Label for the lyrics settings",
 	"display-control": "Label for the display control section",
-	"slide-control": "Label for the slide control section"
+	"slide-control": "Label for the slide control section",
+        "title-visibility": "Label for options that control when to display the title",
+        "title-visibility-song": "Option to display title when song lyrics are live",
+        "title-visibility-scripture": "Option to display title when Scripture is live"
 }
