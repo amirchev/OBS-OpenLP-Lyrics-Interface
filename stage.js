@@ -45,16 +45,18 @@ window.OpenLP = {
                             if (titleVisible[plugin]) {
                                 if (plugin === "bibles") {
                                     let location = String(/\d? ?\w+ \d+:[0-9, -]+/.exec(title)).trim();
-                                    let allVersions = title.match(/[A-Z]{3,}/g);
+                                    let bibleVersions = title.match(/[A-Z]{3,}/g);
                                     let uniqueVersions = [];
                                     let versions = "";
-                                    allVersions.forEach(function (version, index, array) {
-                                        if (!uniqueVersions.includes(version)) {
-                                            uniqueVersions.push(version);
-                                            versions += version + ", ";
-                                        }
-                                    });
-                                    versions = versions.slice(0, -2);
+                                    if (bibleVersions !== null) {
+                                        bibleVersions.forEach(function (version, index, array) {
+                                            if (!uniqueVersions.includes(version)) {
+                                                uniqueVersions.push(version);
+                                                versions += version + ", ";
+                                            }
+                                        });
+                                        versions = versions.slice(0, -2);
+                                    }
                                     title = location + " " + versions;
                                 }
                                 titleDiv.html(title);
@@ -72,8 +74,7 @@ window.OpenLP = {
                         }
                         titleHidden = false;
                     }
-                }
-        );
+                });
     },
     loadSlides: function (event) {
         $.getJSON(
