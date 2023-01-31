@@ -33,48 +33,54 @@ var startingFont = 36;
 
 window.OpenLP = {
     updateTitle: function (event) {
-        $.getJSON("/api/service/list",
-                function (data, status) {
-                    let validTitle = false;
-                    let titleDiv = $(".title");
-                    for (idx in data.results.items) {
-                        idx = parseInt(idx, 10);
-                        if (data.results.items[idx]["selected"]) {
-                            let title = data.results.items[idx]["title"];
-                            let plugin = data.results.items[idx]["plugin"];
-                            if (titleVisible[plugin]) {
-                                if (plugin === "bibles") {
-                                    let location = String(/\d? ?\w+ \d+:[0-9, -]+/.exec(title)).trim();
-                                    let bibleVersions = title.match(/[A-Z]{3,}/g);
-                                    let uniqueVersions = [];
-                                    let versions = "";
-                                    if (bibleVersions !== null) {
-                                        bibleVersions.forEach(function (version, index, array) {
-                                            if (!uniqueVersions.includes(version)) {
-                                                uniqueVersions.push(version);
-                                                versions += version + ", ";
-                                            }
-                                        });
-                                        versions = versions.slice(0, -2);
-                                    }
-                                    title = location + " " + versions;
-                                }
-                                titleDiv.html(title);
-                                validTitle = true;
+        if (OpenLP.currentSlides == undefined) {
+            // Bail if we're not fully initialized yet
+            return;
+        }
+        let slide = OpenLP.currentSlides[OpenLP.currentSlide];
+        if (slide["title"]) {
+            let titleDiv = $(".title");
+            let title = slide["title"];
+            let validTitle = false;
+            let plugin = "";
+            if (!isNaN(parseInt(slide["text"][0], 10))) {
+                //if the slide text starts with a number, then it is a Bible
+                //verse, otherwise it is a song
+                plugin = "bibles";
+            } else {
+                plugin = "songs";
+            }
+            if (titleVisible[plugin]) {
+                if (plugin === "bibles") {
+                    let location = String(/\d? ?\w+ \d+:[0-9, -]+/.exec(title)).trim();
+                    let bibleVersions = title.match(/[A-Z]{3,}/g);
+                    let uniqueVersions = [];
+                    let versions = "";
+                    if (bibleVersions !== null) {
+                        bibleVersions.forEach(function (version, index, array) {
+                            if (!uniqueVersions.includes(version)) {
+                                uniqueVersions.push(version);
+                                versions += version + ", ";
                             }
-                            break;
-                        }
+                        });
+                        versions = versions.slice(0, -2);
                     }
-                    if (!validTitle) {
-                        titleDiv.fadeOut(fadeDuration);
-                        titleHidden = true;
-                    } else {
-                        if (!lyricsHidden && !alwaysHide) {
-                            titleDiv.fadeIn(fadeDuration);
-                        }
-                        titleHidden = false;
-                    }
-                });
+                    title = location + " " + versions;
+                }
+                titleDiv.html(title);
+                validTitle = true;
+            }
+            if (!validTitle) {
+                titleDiv.fadeOut(fadeDuration);
+                titleHidden = true;
+            } else {
+                if (!lyricsHidden && !alwaysHide) {
+                    titleDiv.fadeIn(fadeDuration);
+                }
+                titleHidden = false;
+            }
+        }
+
     },
     loadSlides: function (event) {
         $.getJSON(
@@ -110,16 +116,13 @@ window.OpenLP = {
                         }
                         if (slide["selected"])
                             OpenLP.currentSlide = idx;
-                    })
+                    });
                     OpenLP.updateTitle();
-                    OpenLP.updateSlide();
+                    OpenLP.updateText();
                 }
         );
     },
-    updateSlide: function () {
-        // Show the current slide on top. Any trailing slides for the same verse
-        // are shown too underneath in grey.
-        // Then leave a blank line between following verses
+    updateText: function () {
         if (OpenLP.currentSlides == undefined) {
             // Bail if we're not fully initialized yet
             return;
@@ -127,10 +130,7 @@ window.OpenLP = {
         let slide = OpenLP.currentSlides[OpenLP.currentSlide];
         let text = "";
         let tags = new Array();
-        // use title if available
-        if (slide["title"]) {
-            text = slide["title"];
-        } else {
+        if (slide["html"] || slide["text"]) {
             if (textFormatting['all'] === true) {
                 tags.push('all');
             } else {
@@ -185,7 +185,7 @@ window.OpenLP = {
                         OpenLP.loadSlides();
                     } else if (OpenLP.currentSlide != data.results.slide) {
                         OpenLP.currentSlide = parseInt(data.results.slide, 10);
-                        OpenLP.updateSlide();
+                        OpenLP.updateText();
                     }
                     //if screen is blanked, hide on stream as well
                     let blankScreen = data.results.display === true
